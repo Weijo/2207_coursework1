@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import cgi
 import json
 import os
+import ssl
 
 class RequestHandler(BaseHTTPRequestHandler):
 
@@ -40,10 +41,17 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b'Success')
         
-def run(server_class=HTTPServer, handler_class=RequestHandler, port=80):
-    server_address = ("", port)
-    httpd = server_class(server_address, handler_class)
-    print("Starting HTTP server on port {}".format(port))
+def run():
+    port = 443
+    httpd = HTTPServer(("",port), RequestHandler)
+    print("Starting HTTPS server on port {}".format(port))
+
+    # Create an SSL context
+    context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+    context.load_cert_chain(certfile='cert.pem', keyfile='key.pem', password='P@ssw0rd')
+
+    # Use the SSL context for the HTTPS server
+    httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
     httpd.serve_forever()
 
 run()

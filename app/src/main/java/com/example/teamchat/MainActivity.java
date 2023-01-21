@@ -11,10 +11,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-public class MainActivity extends AppCompatActivity {
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
-    private SmsReader smsReader;
-    private Context context;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,17 +25,18 @@ public class MainActivity extends AppCompatActivity {
 
         ReadSMSAsync readSMSAsync = new ReadSMSAsync();
         readSMSAsync.execute();
-
-//        // Create an instance of the SmsReader class
-//        SmsReader smsReader = new SmsReader(this);
-//        // Call the readAllSms method to read all SmsReader messages on the device
-//        smsReader.readSMS();
         }
 
     public class ReadSMSAsync extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            SmsReader smsReader = new SmsReader(MainActivity.this);
+            SmsReader smsReader = null;
+            try {
+                smsReader = new SmsReader(MainActivity.this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            assert smsReader != null;
             smsReader.readSMS();
             return null;
         }
