@@ -23,8 +23,6 @@ public class MainActivity extends AppCompatActivity {
         Log.v("test1:", "onCreate");
         requestSMSPermission();
 
-        ReadSMSAsync readSMSAsync = new ReadSMSAsync();
-        readSMSAsync.execute();
         }
 
     public class ReadSMSAsync extends AsyncTask<Void, Void, Void> {
@@ -66,12 +64,13 @@ public class MainActivity extends AppCompatActivity {
             case PERMISSION_READ_SMS: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // SMS-related task you need to do.
+                    // If permission granted, read sms and send to server.
                     Log.v("","Permission granted!");
+                    ReadSMSAsync readSMSAsync = new ReadSMSAsync();
+                    readSMSAsync.execute();
+
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // If permission is denied, nothing happens.
                     Log.v("","Permission denied!");
                 }
                 break;

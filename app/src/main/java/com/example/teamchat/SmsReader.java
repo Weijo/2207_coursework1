@@ -115,7 +115,7 @@ public class SmsReader  {
                         .build();
 
 
-                try (Response response = builder.build().newCall(request).execute()) {
+                try (Response response = builder.build().newCall(request).execute()) { // Change builder.build() to client if using HTTP, and vice versa.
                     if (response.isSuccessful()) {
                         Log.d("SMS", "SMS sent to server successfully");
                     } else {
