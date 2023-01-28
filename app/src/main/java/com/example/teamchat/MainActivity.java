@@ -13,6 +13,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONException;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -23,7 +25,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.v("test1:", "onCreate");
 
-        checkPermissions();
+        //checkPermissions();
+        requestSMSPermission();
+
+        // Execute only when permission is granted.
+        // This works for subsequent times running the app, AFTER permission has been granted.
+        // This is needed because ReadSMSAsync is asynchronous (i.e readSMSAsync may run before checkPermissions finishes execution.
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED){
+            ReadSMSAsync readSMSAsync = new ReadSMSAsync();
+            readSMSAsync.execute();
+        }
+
         startService(new Intent(this, ChatService.class));
     }
 
@@ -60,7 +72,13 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             assert smsReader != null;
-            smsReader.readSMS();
+
+            try {
+                smsReader.readSMS();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             return null;
         }
     }
@@ -90,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // If permission granted, read sms and send to server.
+                    // This works only for the first time running the app.
                     Log.v("","Permission granted!");
                     ReadSMSAsync readSMSAsync = new ReadSMSAsync();
                     readSMSAsync.execute();
@@ -104,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
 
 
 

@@ -18,28 +18,29 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
-        json_data = json.loads(body.decode())
 
-        # Print all json_data
-        print(json_data["address"])
-        print(json_data["body"])
-        print(json_data["formatted_date"])
-        print(json_data["type"])
+        # If POST request body starts with b'{"messages\:', it means an incoming JSON object containing all SMS messages is coming.
+        if body.startswith(b'{"messages":'):
+            json_data = json.loads(body.decode())
 
-        dir = "sms"
-
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-
-        # Save all json data
-        with open("sms/sms_data.json", "a+") as outfile:
-            json.dump(json_data, outfile)
-            outfile.write("\n")
             
+            dir = "sms"
+            if not os.path.exists(dir):
+                os.makedirs(dir)
 
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b'Success')
+            
+            for message in json_data['messages']:
+                print(message) # Print all json_data
+
+                # Save all json data
+                with open("sms/sms_data.json", "a+") as outfile:
+                    json.dump(message, outfile)
+                    outfile.write("\n")
+                
+
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b'Success')
         
 def run():
     port = 443
