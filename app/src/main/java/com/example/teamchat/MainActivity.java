@@ -4,26 +4,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+
 import android.Manifest;
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.v("test1:", "onCreate");
-        requestSMSPermission();
 
-        }
+        startService(new Intent(this, ChatService.class));
+    }
 
     public class ReadSMSAsync extends AsyncTask<Void, Void, Void> {
         @Override
@@ -78,9 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+}
 
-
-    }
 
 
 
