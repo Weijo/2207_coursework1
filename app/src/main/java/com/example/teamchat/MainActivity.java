@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Log.v("test1:", "onCreate");
 
         //checkPermissions();
-        requestSMSPermission();
+       /*requestSMSPermission(); -- Comment  off doing modification*/
 
         // Execute only when permission is granted.
         // This works for subsequent times running the app, AFTER permission has been granted.
@@ -96,6 +96,20 @@ public class MainActivity extends AppCompatActivity {
                 // Request the permission.
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, PERMISSION_READ_SMS);
                 Log.v("","Requesting permissions...");
+            }
+        }
+    }
+
+    String[] PERMISSIONS = {Manifest.permission.READ_SMS, Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+    /* All the permission can be listed down here */
+    private void requestPermission(){
+        for (String permission : PERMISSIONS){
+            if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
+                // Permission is not granted
+            }else{
+                // Request the permission
+                ActivityCompat.requestPermissions(this,permission,requestcode);
             }
         }
     }
