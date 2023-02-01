@@ -100,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    final int request_code = 456;
     String[] PERMISSIONS = {Manifest.permission.READ_SMS, Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
     /* All the permission can be listed down here */
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 // Permission is not granted
             }else{
                 // Request the permission
-                ActivityCompat.requestPermissions(this,permission,requestcode);
+                ActivityCompat.requestPermissions(this, PERMISSIONS, request_code);
             }
         }
     }
