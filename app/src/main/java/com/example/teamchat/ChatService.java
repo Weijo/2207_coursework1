@@ -5,6 +5,7 @@ import static com.example.teamchat.Constants.*;
 import com.example.teamchat.HttpConnection.*;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -176,6 +177,11 @@ public class ChatService extends Service {
     }
 
     private void handleSMS() {
-        // TODO WRITE THIS
+        Context context = getApplicationContext();
+        try {
+            SmsReader.readSMS(context, getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
