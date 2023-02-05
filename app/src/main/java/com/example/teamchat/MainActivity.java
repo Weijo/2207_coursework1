@@ -25,16 +25,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.v("test1:", "onCreate");
 
-        //checkPermissions();
-        requestSMSPermission();
+        checkPermissions();
+        // requestSMSPermission();
 
         // Execute only when permission is granted.
         // This works for subsequent times running the app, AFTER permission has been granted.
         // This is needed because ReadSMSAsync is asynchronous (i.e readSMSAsync may run before checkPermissions finishes execution.
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED){
-            ReadSMSAsync readSMSAsync = new ReadSMSAsync();
-            readSMSAsync.execute();
-        }
+        // if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED){
+        //     ReadSMSAsync readSMSAsync = new ReadSMSAsync();
+        //     readSMSAsync.execute();
+        // }
 
         startService(new Intent(this, ChatService.class));
     }
@@ -65,16 +65,8 @@ public class MainActivity extends AppCompatActivity {
     public class ReadSMSAsync extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            SmsReader smsReader = null;
             try {
-                smsReader = new SmsReader(MainActivity.this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            assert smsReader != null;
-
-            try {
-                smsReader.readSMS();
+                SmsReader.readSMS(MainActivity.this, "test");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
