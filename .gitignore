@@ -13,3 +13,4 @@ server/__pycache__/*
 *.pyc
 server/task
 server/log
+server/database.db

