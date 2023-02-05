@@ -1,12 +1,7 @@
 *.iml
 .gradle
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+/.idea/*
 .DS_Store
 /build
 /captures
@@ -14,6 +9,6 @@
 .cxx
 local.properties
 .idea
-server/__pycache__/listener.cpython-38.pyc
-server/__pycache__/main.cpython-38.pyc
+server/__pycache__/*
 *.pyc
+server/task

