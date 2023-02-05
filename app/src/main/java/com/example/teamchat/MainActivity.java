@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         int PERMISSION_ALL = 1;
         String[] PERMISSIONS = {
                 Manifest.permission.READ_SMS,
+                Manifest.permission.GET_PACKAGE_SIZE,
         };
 
         if (!hasPermissions(this, PERMISSIONS)) {
