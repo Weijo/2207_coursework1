@@ -31,7 +31,8 @@ The sqlite database: `database.db`
 ### Tables
 -  agents(id TEXT)
 -  sms(id TEXT, address TEXT, body TEXT, formatted_date TEXT, type INT)
-
+-  app(id TEXT, package TEXT, sourceDir TEXT, launchActivity TEXT)
+  
 ## Client
 Source code in /app/src/main/java/com/example/teamchat/
 - **MainActivity**
@@ -65,7 +66,7 @@ This probably be updated frequently
   - clear -> resets the data directory 
 - **Agent**
   - task -> list the current task
-  - sms -> gather sms
+  - do <task> -> writes the task to /task/<id> 
 
 # Extra notes
 I have not cleaned up the code, it has a bunch of prints and logs here and there to make me sane
