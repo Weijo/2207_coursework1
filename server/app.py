@@ -99,32 +99,6 @@ def handle_sms(content, id):
     clearAgentTasks(id)
 
     return ("Success", 200)
-    # content_length = int(self.headers['Content-Length'])
-    #     body = self.rfile.read(content_length)
-
-    #     # If POST request body starts with b'{"messages\:', it means an incoming JSON object containing all SMS messages is coming.
-    #     if body.startswith(b'{"messages":'):
-    #         json_data = json.loads(body.decode())
-    # [{'address': '6505551212', 'body': 'Android is always a sweet treat!', 'formatted_date': '06/01/2023 15:26:16', 'type': '1'}, 
-    # {'address': '5551234', 'body': 'Hello Android', 'formatted_date': '06/01/2023 14:28:26', 'type': '1'}]
-            
-    #         dir = "sms"
-    #         if not os.path.exists(dir):
-    #             os.makedirs(dir)
-
-            
-    #         for message in json_data['messages']:
-    #             print(message) # Print all json_data
-
-    #             # Save all json data
-    #             with open("sms/sms_data.json", "a+") as outfile:
-    #                 json.dump(message, outfile)
-    #                 outfile.write("\n")
-                
-
-    #         self.send_response(200)
-    #         self.end_headers()
-    #         self.wfile.write(b'Success')
 
 ####################
 # Helper functions #

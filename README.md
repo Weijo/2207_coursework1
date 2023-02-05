@@ -3,9 +3,13 @@
 # Outline
 ## Server
 The C2 Server consists of the c2 listener and the terminal 
-- **listener.py** 
-  - This is the c2 listener
-  - Add on to the `RequestHandler` class to handle your various commands 
+- **app.py** 
+  - This is the c2 listener build on flask
+  - Create your command handlers at the `Command Handler` section and add on to `receiveResult` function for it to be handled
+  - Add on to `init_database` to create a table for the data you want to exfiltrate
+  - It saves the data into an sqlite file `database.db`, you can check out `sqltest.py` on how to use sqlite3 on python 
+  - The logs are saved into `log`, I used `tail -f log` to read the logs
+
 - **terminal.py**
   - This is the command line portion
   - There are two Terminals
@@ -21,7 +25,12 @@ The C2 Server consists of the c2 listener and the terminal
 - **main.py**
   - This runs both servers
 
-The data should be stored in `data/<uuid>/`
+## Database
+The sqlite database: `database.db`
+
+### Tables
+-  agents(id TEXT)
+-  sms(id TEXT, address TEXT, body TEXT, formatted_date TEXT, type INT)
 
 ## Client
 Source code in /app/src/main/java/com/example/teamchat/
