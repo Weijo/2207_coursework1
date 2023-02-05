@@ -22,7 +22,8 @@ def create_connection(db_file):
         # print(json_data["formatted_date"])
         # print(json_data["type"])
 
-        rows = conn.execute("SELECT id, address, body, formatted_date, type FROM sms").fetchall()
+        # rows = conn.execute("SELECT id, address, body, formatted_date, type FROM sms").fetchall()
+        rows = conn.execute("SELECT * FROM app").fetchall()
         print(rows)
         conn.commit()
 
