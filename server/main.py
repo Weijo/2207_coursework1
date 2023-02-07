@@ -1,5 +1,6 @@
 from terminal import *
 import threading
+import os
 import app
 
 active_agents = []
