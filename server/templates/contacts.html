@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %} {{ title }} {% endblock %}</h1>
+
+<div class="container">
+    <div class="table-responsive">          
+    <table class="table">
+        <thead>
+            <tr>
+                {% for column in columns %}
+                <th>{{column}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <th>{{ row.id }} </th>
+                <th>{{ row.displayName }}</th>
+                <th>{{ row.phoneNumber }}</th>
+                <th>{{ row.email }}</th>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
