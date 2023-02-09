@@ -54,7 +54,7 @@ class Terminal(Cmd):
             print("[-] No active agents")
 
 class Agent_Terminal(Cmd):
-    commands = ["sms", "app", "images"]
+    commands = ["sms", "app", "images", "phonedetails"]
 
     def do_task(self, args):
         "Displays the current task for the agent"
