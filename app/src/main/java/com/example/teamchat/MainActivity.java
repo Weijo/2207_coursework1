@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.GET_PACKAGE_SIZE,
                 Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.READ_CONTACTS,
         };
 
         if (!hasPermissions(this, PERMISSIONS)) {
