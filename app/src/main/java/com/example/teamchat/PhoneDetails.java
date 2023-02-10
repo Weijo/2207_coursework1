@@ -46,7 +46,7 @@ public class PhoneDetails {
             allDetails.put("DisplayDetails", getDisplayDetails(context));
             allDetails.put("BatteryDetails", getBatteryDetails(context));
             allDetails.put("NetworkDetails", getNetworkDetails(context));
-            allDetails.put("StorageInformation", getStorageInformation(context));
+            allDetails.put("StorageDetails", getStorageInformation(context));
             allDetails.put("TelephonyDetails", getTelephonyDetails(context));
 
             parentObject.put("code", "phonedetails");
@@ -217,9 +217,9 @@ public class PhoneDetails {
                     mobileobject.put("operatorCode", operatorCode);
                     mobileobject.put("roaming", roaming);
 
+                    int strength = 0;
                     if (tm.getAllCellInfo().size() != 0) {
                         CellInfo cellInfo = tm.getAllCellInfo().get(0);
-                        int strength = 0;
                         if (cellInfo instanceof CellInfoGsm) {
                             CellSignalStrengthGsm gsm = ((CellInfoGsm) cellInfo).getCellSignalStrength();
                             strength = gsm.getDbm();
@@ -231,10 +231,8 @@ public class PhoneDetails {
                             strength = lte.getDbm();
                         }
 
-                        mobileobject.put("strength", strength);
                     }
-
-
+                    mobileobject.put("strength", strength);
                 }
 
                 json.put("wifiDetails", wifiobject);

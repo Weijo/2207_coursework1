@@ -36,7 +36,7 @@
 			</tbody>
 		</table>
 	</div>
-
+	<br>
 	<div class="table-responsive">  
 		<h2>Operating System Information</h2>
 		<table class="table">
@@ -58,5 +58,138 @@
 			</tbody>
 		</table>
 	</div>
+	<br>
+	<div class="table-responsive">  
+		<h2>Display Information</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					{% for column in display_d_columns %}
+					<th>{{column}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for row in display_d_data_rows %}
+				<tr>
+					<th>{{ row.id }} </th>
+					<th>{{ row.width }} px</th>
+					<th>{{ row.height }} px</th>
+					<th>{{ row.PPI }}</th>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<div class="table-responsive">  
+		<h2>Battery Information</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					{% for column in battery_d_columns %}
+					<th>{{column}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for row in battery_d_data_rows %}
+				<tr>
+					<th>{{ row.id }} </th>
+					<th>{{ row.level }} </th>
+					<th>{{ row.status }}</th>
+					<th>{{ row.isCharging }}</th>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<div class="table-responsive">  
+		<h2>Network Information</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					{% for column in network_d_columns %}
+					<th>{{column}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for row in network_d_data_rows %}
+				<tr>
+					<th>{{ row.id }} </th>
+					<th>{{ row.networkType }}</th>
+					<th>{{ row.isNetworkAvailable }}</th>
+					<th>{{ row.isWifiConnected }}</th>
+					<th>{{ row.isMobileConnected }}</th>
+					<th>{{ row.ssid }}</th>
+					<th>{{ row.bssid }}</th>
+					<th>{{ row.linkSpeed }}</th>
+					<th>{{ row.ipAddress }}</th>
+					<th>{{ row.networkId }}</th>
+					<th>{{ row.signalStrength }}</th>
+					<th>{{ row.mobileType }}</th>
+					<th>{{ row.State }}</th>
+					<th>{{ row.detailedState }}</th>
+					<th>{{ row.operatorName }}</th>
+					<th>{{ row.operatorCode }}</th>
+					<th>{{ row.roaming }}</th>
+					<th>{{ row.strength }}</th>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<div class="table-responsive">  
+		<h2>Storage Information</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					{% for column in storage_d_columns %}
+					<th>{{column}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for row in storage_d_data_rows %}
+				<tr>
+					<th>{{ row.id }} </th>
+					<th>{{ row.totalExternalStorage }} MB</th>
+					<th>{{ row.availableExternalStorage }} MB</th>
+					<th>{{ row.totalInternalStorage }} MB</th>
+					<th>{{ row.availableInternalStorage }} MB</th>
+					<th>{{ row.storagePath }}</th>
+					<th>{{ row.totalSpace }} MB</th>
+					<th>{{ row.availableSpace }} MB</th>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<br>
+	<div class="table-responsive">  
+		<h2>Telephony Information</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					{% for column in telephony_d_columns %}
+					<th>{{column}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for row in telephony_d_data_rows %}
+				<tr>
+					<th>{{ row.id }} </th>
+					<th>{{ row.phoneNumber }}</th>
+					<th>{{ row.imei }}</th>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<br>
 </div>
 {% endblock %}
