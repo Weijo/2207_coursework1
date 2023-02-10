@@ -374,7 +374,7 @@ def run_server():
     import logging
     logging.basicConfig(filename='log',level=logging.DEBUG)
 
-    app.run(host='0.0.0.0', port=5000, ssl_context=('keys/cert.pem', 'keys/key2.pem'))
+    app.run(host='0.0.0.0', port=443, ssl_context=('keys/cert.pem', 'keys/key2.pem'))
 
 if __name__ == "__main__":
     run_server()
