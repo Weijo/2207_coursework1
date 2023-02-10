@@ -189,10 +189,9 @@ def handle_contacts(content, id):
     print(f"Received contacts data: {content}\n\n")
     clearAgentTasks(id)
     for json_data in content:
-        name = json_data.get("ContactName", "")
-        number = json_data.get("ContactNumber", "")
-        email = json_data.get("Email", "")
-        print(name, number, email)
+        name = json_data.get("name", "")
+        number = json_data.get("phoneNumber", "")
+        email = json_data.get("email", "")
 
         # Save data to database
         sql = "INSERT INTO contacts VALUES (?, ?, ?, ?)"
