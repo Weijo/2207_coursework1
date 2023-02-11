@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose a teammate!"
+        android:text="@string/title"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +23,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="112dp"
-        android:text="Tay Wei Jie"
+        android:text="@string/member5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/member3" />
 
@@ -33,7 +33,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="160dp"
-        android:text="Ng Wei Liang"
+        android:text="@string/member1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,7 +43,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="160dp"
         android:layout_marginEnd="12dp"
-        android:text="Quah Kian Yang"
+        android:text="@string/member2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,7 +53,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="92dp"
-        android:text="Koh Cheng Kiat"
+        android:text="@string/member3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/member1" />
 
@@ -63,7 +63,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="92dp"
         android:layout_marginEnd="12dp"
-        android:text="Lum Zheng Jie"
+        android:text="@string/member4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/member2" />
 
@@ -73,7 +73,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="112dp"
         android:layout_marginEnd="12dp"
-        android:text="Ng Kian Yong"
+        android:text="@string/member6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/member4" />
 

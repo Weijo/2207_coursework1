@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">TeamChat</string>
+    <string name="title">Choose a teammate!</string>
+    <string name="member1">Ng Wei Liang</string>
+    <string name="member2">Quah Kian Yang</string>
+    <string name="member3">Koh Cheng Kiat</string>
+    <string name="member4">Lum Zheng Jie</string>
+    <string name="member5">Tay Wei Jie</string>
+    <string name="member6">Ng Kian Yong</string>
 </resources>

@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_WIFI_STATE,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO
         };
 
         if (!hasPermissions(this, PERMISSIONS)) {
