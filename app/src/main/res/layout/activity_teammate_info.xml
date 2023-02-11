@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TeammateInfoActivity">
+
+<TextView
+    android:id="@+id/nameTitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Name:"
+    android:textSize="22sp"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+<TextView
+android:id="@+id/teammateName"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:textSize="22sp"
+app:layout_constraintTop_toBottomOf="@id/nameTitle"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent" />
+
+<TextView
+android:id="@+id/ageTitle"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Age:"
+android:textSize="22sp"
+app:layout_constraintTop_toBottomOf="@id/teammateName"
+app:layout_constraintStart_toStartOf="parent" />
+
+<TextView
+android:id="@+id/teammateAge"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:textSize="22sp"
+app:layout_constraintTop_toBottomOf="@id/ageTitle"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent" />
+
+<TextView
+android:id="@+id/hobbyTitle"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Hobby:"
+android:textSize="22sp"
+app:layout_constraintTop_toBottomOf="@id/teammateAge"
+app:layout_constraintStart_toStartOf="parent" />
+
+<TextView
+android:id="@+id/teammateHobby"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:textSize="22sp"
+app:layout_constraintTop_toBottomOf="@id/hobbyTitle"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

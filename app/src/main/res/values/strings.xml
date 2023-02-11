@@ -1,10 +1,23 @@
 <resources>
-    <string name="app_name">TeamChat</string>
-    <string name="title">Choose a teammate!</string>
-    <string name="member1">Ng Wei Liang</string>
-    <string name="member2">Quah Kian Yang</string>
-    <string name="member3">Koh Cheng Kiat</string>
-    <string name="member4">Lum Zheng Jie</string>
-    <string name="member5">Tay Wei Jie</string>
-    <string name="member6">Ng Kian Yong</string>
+<string name="app_name">TeamChat</string>
+<string name="title">Choose a teammate!</string>
+<string name="member1">Ng Wei Liang</string>
+<string name="member1_age">25</string>
+<string name="member1_hobby">Reading</string>
+<string name="member2">Quah Kian Yang</string>
+<string name="member2_age">27</string>
+<string name="member2_hobby">Hiking</string>
+<string name="member3">Koh Cheng Kiat</string>
+<string name="member3_age">26</string>
+<string name="member3_hobby">Cycling</string>
+<string name="member4">Lum Zheng Jie</string>
+<string name="member4_age">30</string>
+<string name="member4_hobby">Rollerblading</string>
+<string name="member5">Tay Wei Jie</string>
+<string name="member5_age">35</string>
+<string name="member5_hobby">Coding</string>
+<string name="member6">Ng Kian Yong</string>
+<string name="member6_age">38</string>
+<string name="member6_hobby">Eating</string>
+<!-- Add more resources for the other members -->
 </resources>
