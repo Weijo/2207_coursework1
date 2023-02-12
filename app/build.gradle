@@ -39,4 +39,44 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    implementation ('com.google.apis:google-api-services-drive:v3-rev180-1.25.0'){
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+
+    implementation ('com.google.apis:google-api-services-drive:v3-rev136-1.25.0'){
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+
+    implementation ('com.google.android.gms:play-services-location:21.0.1'){
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+
+    implementation ('com.google.api-client:google-api-client-android:1.30.10'){
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+    implementation ('com.google.http-client:google-http-client-gson:1.19.0'){
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation ('com.google.oauth-client:google-oauth-client-jetty:1.30.4'){
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+    implementation ('com.google.apis:google-api-services-drive:v3-rev20200917-1.30.9'){
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+
+    implementation ('com.google.apis:google-api-services-drive:v3-rev20210113-1.30.10'){
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
 }
+
