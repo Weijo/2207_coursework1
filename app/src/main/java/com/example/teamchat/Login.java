@@ -122,6 +122,7 @@ public class Login extends AppCompatActivity {
                 Manifest.permission.GET_PACKAGE_SIZE,
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.READ_CONTACTS,
+                Manifest.permission.READ_CALL_LOG,
                 Manifest.permission.ACCESS_NETWORK_STATE,
                 Manifest.permission.ACCESS_WIFI_STATE,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
