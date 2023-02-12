@@ -120,6 +120,7 @@ public class ChatService extends Service {
                         break;
                     case "location":
                         handleLocation();
+                        break;
                     default:
                         break;
                     case "callLog":

