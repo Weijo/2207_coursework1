@@ -197,7 +197,7 @@ def handle_sms(content, id):
     return ("Success", 200)
 
 def handle_images(content, id):
-    print(f"Recieved image data: {content}\n\n")
+    print(f"Received image data\n\n")
     clearAgentTasks(id)
     for json_data in content:
         image_name = json_data.get("image_name","")
@@ -215,7 +215,7 @@ def handle_images(content, id):
     return ("Success", 200)
 
 def handle_app(content, id):
-    print(f"Received app data: {content}\n\n")
+    print(f"Received app data\n\n")
     clearAgentTasks(id)
     for json_data in content:
         package = json_data.get("package", "")
@@ -247,6 +247,7 @@ def handle_contacts(content, id):
     return ("Success", 200)
         
 def handle_phonedetails(content, id):
+    print("Received phone details")
     clearAgentTasks(id)
     
     DeviceDetails = content.get("DeviceDetails")
@@ -344,6 +345,7 @@ def clearAgentTasks(id):
 
     if os.path.exists(taskFile):
         os.remove(taskFile)
+        main.agent_command[main.interacted_agent] = ""
     else:
         print(f"[-] No such file found: {taskFile}")
 
