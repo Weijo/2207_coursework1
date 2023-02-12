@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -30,12 +29,8 @@ import com.google.api.services.drive.DriveScopes;
 import java.util.Collections;
 
 public class Login extends AppCompatActivity {
-    Button login_button;
-    private Drive mService;
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
-    MainActivity driveServiceHelper;
-    Drive googleDriveService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
