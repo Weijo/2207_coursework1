@@ -14,3 +14,4 @@ server/__pycache__/*
 server/task
 server/log
 server/database.db
+server/static/googledata/*

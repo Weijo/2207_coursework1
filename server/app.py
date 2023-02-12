@@ -326,6 +326,11 @@ def handle_googledata(content, id):
         encoded_bytes = json_data.get("bytes", "")   
         decoded_bytes = base64.b64decode(encoded_bytes)
         path = "googledata/"+file_name
+        
+        directory = "static/googledata"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        
         with open("static/" + path, 'wb') as f: 
             f.write(decoded_bytes)
             
