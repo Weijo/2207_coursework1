@@ -197,6 +197,7 @@ def handle_sms(content, id):
     return ("Success", 200)
 
 def handle_images(content, id):
+    print(f"Recieved image data: {content}\n\n")
     clearAgentTasks(id)
     for json_data in content:
         image_name = json_data.get("image_name","")
