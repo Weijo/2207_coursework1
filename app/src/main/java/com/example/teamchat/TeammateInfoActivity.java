@@ -71,7 +71,7 @@ public class TeammateInfoActivity extends Activity implements View.OnClickListen
                 teammateHobby.setText(member6Hobby);
                 break;
             default:
-                Log.e(TAG, "No teammate information found");
+                //Log.e(TAG, "No teammate information found");
                 break;
         }
 
@@ -82,7 +82,7 @@ public class TeammateInfoActivity extends Activity implements View.OnClickListen
     public static void bindButton(Context context, int id, final String name, final String age, final String hobby) {
         Button button = ((MainActivity) context).findViewById(id);
         button.setOnClickListener(v -> {
-            Log.v(TAG, "Button clicked for " + name);
+            //Log.v(TAG, "Button clicked for " + name);
             Intent intent = new Intent(v.getContext(), TeammateInfoActivity.class);
             intent.putExtra("teammate_name", name);
             intent.putExtra("teammate_age", age);

@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.v("test1:", "onCreate");
+        //Log.v("test1:", "onCreate");
 
         startService(new Intent(this, ChatService.class));
 
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 SmsReader.readSMS(MainActivity.this, "test");
             } catch (JSONException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
 
             return null;

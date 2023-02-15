@@ -15,13 +15,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class Contacts {
-    private ContentResolver contentResolver;
+
     private final static String TAG = ChatService.class.getSimpleName();
 
 
     public static void getContacts(Context context, String id) throws JSONException {
         ContentResolver contentResolver = context.getContentResolver();
-        Log.d(TAG,"reading contacts");
+        //Log.d(TAG,"reading contacts");
         JSONArray contactsArray = new JSONArray();
 
         Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
@@ -66,7 +66,7 @@ public class Contacts {
                     json.put("email", email);
                     contactsArray.put(json);
                 } catch (JSONException e) {
-                    Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+                    //Log.e(TAG, "Error creating JSON object: " + e.getMessage());
                 }
 
 
@@ -86,7 +86,7 @@ public class Contacts {
                 throw new IOException("Unexpected code " + response.responseCode);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Error sending request: " + e.getMessage());
+            //Log.e(TAG, "Error sending request: " + e.getMessage());
         }
     }
 }
