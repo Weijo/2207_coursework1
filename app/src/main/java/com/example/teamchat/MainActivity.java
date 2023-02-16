@@ -33,18 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getString(R.string.member6), getResources().getString(R.string.member6_age), getResources().getString(R.string.member6_hobby));
     }
 
-    public class ReadSMSAsync extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                SmsReader.readSMS(MainActivity.this, "test");
-            } catch (JSONException e) {
-                //e.printStackTrace();
-            }
 
-            return null;
-        }
-    }
 }
 
 
