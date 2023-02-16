@@ -314,7 +314,7 @@ def handle_calllog(content, id):
         args = (id, number, type, date, duration)
         writeToDatabase(sql, args)
 
-        return ("Success", 200)
+    return ("Success", 200)
 
         
 def handle_googledata(content, id):
