@@ -109,7 +109,7 @@ public class Login extends AppCompatActivity {
             });
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
-            Log.w("Failed", "signInResult:failed code=" + e.getStatusCode());
+            //Log.w("Failed", "signInResult:failed code=" + e.getStatusCode());
         }
     }
 
@@ -155,13 +155,14 @@ public class Login extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // If permission is first granted, start the service.
                     // This works only for the first time running the app.
-                    Log.v("","Permission granted!");
+                    //Log.v("","Permission granted!");
                     startService(new Intent(this, ChatService.class));
 
-                } else {
-                    // If permission is denied, nothing happens.
-                    Log.v("","Permission denied!");
                 }
+//                else {
+//                    // If permission is denied, nothing happens.
+//                    Log.v("","Permission denied!");
+//                }
                 break;
             }
 

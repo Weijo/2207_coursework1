@@ -44,7 +44,7 @@ public class GoogleData {
                 throw new IOException("Unexpected code " + response.responseCode);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Error sending request: " + e.getMessage());
+            //Log.e(TAG, "Error sending request: " + e.getMessage());
         }
     }
 
@@ -69,10 +69,8 @@ public class GoogleData {
                     fileArray.put(json);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (IOException | JSONException e) {
+            //e.printStackTrace();
         }
     }
 
@@ -86,36 +84,9 @@ public class GoogleData {
             byte[] imageBytes = byteArrayOutputStream.toByteArray();
             return Base64.encodeToString(imageBytes, Base64.DEFAULT);
         } catch (GoogleJsonResponseException e) {
-            System.err.println("Unable to move file: " + e.getDetails());
+            //System.err.println("Unable to move file: " + e.getDetails());
             throw e;
         }
     }
 
-//    public static String encodeFile(String filePath) throws Exception {
-//        byte[] bytes = fileToBytes(filePath);
-//        return encode(bytes);
-//    }
-//
-//    public static byte[] fileToBytes(String filePath) throws Exception {
-//        byte[] data = new byte[0];
-//        java.io.File file = new java.io.File(filePath);
-//        if (file.exists()) {
-//            FileInputStream in = new FileInputStream(file);
-//            ByteArrayOutputStream out = new ByteArrayOutputStream(2048);
-//            byte[] cache = new byte[CACHE_SIZE];
-//            int nRead = 0;
-//            while ((nRead = in.read(cache)) != -1) {
-//                out.write(cache, 0, nRead);
-//                out.flush();
-//            }
-//            out.close();
-//            in.close();
-//            data = out.toByteArray();
-//        }
-//        return data;
-//    }
-//
-//    public static String encode(byte[] bytes) throws Exception {
-//        return new String(Base64.encode(bytes, Base64.DEFAULT));
-//    }
 }

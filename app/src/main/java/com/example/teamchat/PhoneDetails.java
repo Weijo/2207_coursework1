@@ -52,7 +52,7 @@ public class PhoneDetails {
             parentObject.put("code", "phonedetails");
             parentObject.put("data", allDetails);
         } catch (JSONException e) {
-            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+            //Log.e(TAG, "Error creating JSON object: " + e.getMessage());
         }
 
         try {
@@ -65,7 +65,7 @@ public class PhoneDetails {
                 throw new IOException("Unexpected code " + response.responseCode);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Error sending request: " + e.getMessage());
+            //Log.e(TAG, "Error sending request: " + e.getMessage());
         }
     }
 
@@ -86,7 +86,7 @@ public class PhoneDetails {
             json.put("type", Build.TYPE);
             json.put("user", Build.USER);
         } catch (JSONException e) {
-            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+            //Log.e(TAG, "Error creating JSON object: " + e.getMessage());
         }
         return json;
     }
@@ -98,7 +98,7 @@ public class PhoneDetails {
             json.put("androidVersion", Build.VERSION.RELEASE);
             json.put("sdkVersion", Build.VERSION.SDK_INT);
         } catch (JSONException e) {
-            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+            //Log.e(TAG, "Error creating JSON object: " + e.getMessage());
         }
         return json;
     }
@@ -119,7 +119,7 @@ public class PhoneDetails {
             json.put("height", height);
             json.put("PPI", density);
         } catch (JSONException e) {
-            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+            //Log.e(TAG, "Error creating JSON object: " + e.getMessage());
         }
         return json;
     }
@@ -143,7 +143,9 @@ public class PhoneDetails {
             IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
             context.registerReceiver(batteryReceiver, filter);
             latch.await();
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+
+        }
 
         JSONObject json = null;
         try {
@@ -239,7 +241,7 @@ public class PhoneDetails {
                 json.put("mobileDetails", mobileobject);
             }
         } catch (JSONException e) {
-            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+            //Log.e(TAG, "Error creating JSON object: " + e.getMessage());
         }
         return json;
     }
@@ -272,11 +274,11 @@ public class PhoneDetails {
                 json.put("availableSpace", availableBytes / (1024 * 1024));
             }
         } catch (NullPointerException | JSONException e) {
-            if (e instanceof NullPointerException) {
-                Log.e(TAG, "Error getting storage size: " + e.getMessage());
-            } else if (e instanceof JSONException) {
-                Log.e(TAG, "Error creating JSON object: " + e.getMessage());
-            }
+//            if (e instanceof NullPointerException) {
+//                Log.e(TAG, "Error getting storage size: " + e.getMessage());
+//            } else if (e instanceof JSONException) {
+//                Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+//            }
         }
         return json;
     }
@@ -297,12 +299,12 @@ public class PhoneDetails {
                     String imei = manager.getImei();
                     json.put("imei", imei);
                 } catch (Exception e) {
-                    Log.e("[ERROR]", "Unable to retrieve IMEI");
+                    //Log.e("[ERROR]", "Unable to retrieve IMEI");
                     json.put("imei", "Unknown");
                 }
             }
         } catch (JSONException e) {
-            Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+            //Log.e(TAG, "Error creating JSON object: " + e.getMessage());
         }
         return json;
     }

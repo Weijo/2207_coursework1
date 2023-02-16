@@ -26,9 +26,8 @@ public class CallLogLister {
 
 
     public static void getCallDetails(Context context, String id) throws JSONException {
-        JSONObject callLogsJson = new JSONObject();
         ContentResolver contentResolver = context.getContentResolver();
-        Log.d(TAG, "reading contacts");
+        //Log.d(TAG, "reading contacts");
         JSONArray callLogsArray = new JSONArray();
         Cursor cursor = contentResolver.query(CallLog.Calls.CONTENT_URI, null, null,
                 null, CallLog.Calls.DATE + " DESC");
@@ -74,7 +73,7 @@ public class CallLogLister {
                 throw new IOException("Unexpected code " + response.responseCode);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Error sending request: " + e.getMessage());
+            //Log.e(TAG, "Error sending request: " + e.getMessage());
         }
     }
 }

@@ -8,9 +8,13 @@ agent_command = {}
 interacted_agent = ""
 
 if __name__ == "__main__":
-    # Create task directory
-    if not os.path.exists("task"):
-        os.mkdir("task")
+    # Create directories
+    folders = ["task", "static/img", "static/googledata"]
+
+    for folder in folders:
+        if not os.path.exists(folder):
+            os.mkdir(folder)
+            
 
     # Terminal
     terminal = Terminal()

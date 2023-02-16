@@ -51,7 +51,7 @@ public class HttpConnection {
 //        return client.newCall(request).execute();
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                Log.e(TAG, "Error connecting to " + url + ": " + response);
+                //Log.e(TAG, "Error connecting to " + url + ": " + response);
                 ReturnResponse returnResponse = new ReturnResponse("", -1);
                 response.close();
                 return returnResponse;
@@ -65,7 +65,7 @@ public class HttpConnection {
             return returnResponse;
 
         } catch (IOException e) {
-            Log.e(TAG, "Error connecting to " + url, e);
+            //Log.e(TAG, "Error connecting to " + url, e);
             return null;
         }
     }

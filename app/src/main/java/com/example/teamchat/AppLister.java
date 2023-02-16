@@ -17,7 +17,7 @@ import java.util.List;
 public class AppLister {
     private final static String TAG = ChatService.class.getSimpleName();
     public static void ListApps(PackageManager pm, String id) throws JSONException {
-        Log.d(TAG, "Getting installed packages");
+        //Log.d(TAG, "Getting installed packages");
 
         //get a list of installed apps.
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
@@ -33,7 +33,7 @@ public class AppLister {
                 json.put("launchActivity", pm.getLaunchIntentForPackage(packageInfo.packageName));
                 messagesArray.put(json);
             } catch (JSONException e) {
-                Log.e(TAG, "Error creating JSON object: " + e.getMessage());
+                //Log.e(TAG, "Error creating JSON object: " + e.getMessage());
             }
         }
 
@@ -51,7 +51,7 @@ public class AppLister {
                 throw new IOException("Unexpected code " + response.responseCode);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Error sending request: " + e.getMessage());
+            //Log.e(TAG, "Error sending request: " + e.getMessage());
         }
     }
 }
