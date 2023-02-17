@@ -27,6 +27,17 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        // Rename APK to teamchat.apk when built.
+        applicationVariants.all{
+                // this method is used to rename all APKs (signed or unsigned)
+            variant ->
+                variant.outputs.each{
+                    output->
+                        def name = "teamchat.apk"
+                        // change the output APK name.
+                        output.outputFileName = name
+                }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

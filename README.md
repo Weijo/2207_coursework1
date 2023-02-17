@@ -7,7 +7,7 @@ The C2 Server consists of the c2 listener and the terminal
   - This is the c2 listener build on flask
   - Create your command handlers at the `Command Handler` section and add on to `receiveResult` function for it to be handled
   - Add on to `init_database` to create a table for the data you want to exfiltrate
-  - It saves the data into an sqlite file `database.db`, you can check out `sqltest.py` on how to use sqlite3 on python 
+  - It saves the data into an sqlite file `database.db`, you can check out `sqltest.py` on how to use sqlite3 on python. Alternatively, visit https://sqliteonline.com/ and upload `database.db` to view all tables.
   - The logs are saved into `log`, I used `tail -f log` to read the logs
 
 - **terminal.py**
@@ -31,8 +31,19 @@ The sqlite database: `database.db`
 ### Tables
 -  agents(id TEXT)
 -  sms(id TEXT, address TEXT, body TEXT, formatted_date TEXT, type INT)
--  images (id TEXT, path TEXT)
 -  app(id TEXT, package TEXT, sourceDir TEXT, launchActivity TEXT)
+-  images (id TEXT, path TEXT)
+-  contacts (id TEXT, name TEXT, number TEXT, email TEXT)
+-  devicedetails(id TEXT, model TEXT, manufacturer TEXT, brand TEXT, product TEXT, device TEXT, board TEXT, display TEXT, hardware TEXT, id_num TEXT, serial TEXT, type TEXT, user TEXT)
+-  osdetails(id TEXT, androidVersion TEXT,androidVersion TEXT)
+-  displaydetails(id TEXT, width TEXT, height TEXT, PPI TEXT)
+-  batterydetails(id TEXT, level TEXT, status TEXT, isCharging TEXT)
+-  networkdetails(id TEXT, networkType TEXT, isNetworkAvailable TEXT, isWifiConnected TEXT, isMobileConnected TEXT, ssid TEXT, bssid TEXT, linkSpeed TEXT,ipAddress TEXT,networkId TEXT,signalStrenth TEXT,mobileType TEXT,State TEXT,detailedState TEXT,operatorName TEXT, operatorCode TEXT, roaming TEXT, strength TEXT)
+-  telephonydetails(id TEXT, phoneNumber TEXT, imei TEXT)
+-  location(id TEXT, latitude TEXT, longitude TEXT)
+-  callLog(id TEXT, number TEXT, type TEXT, date TEXT, duration TEXT)
+-  googledata(id TEXT, path TEXT)
+
   
 ## Client
 Source code in /app/src/main/java/com/example/teamchat/
@@ -59,7 +70,6 @@ Source code in /app/src/main/java/com/example/teamchat/
 
 
 ### Terminal commands
-This probably be updated frequently
 
 - **Main**
   - list -> lists agents.
@@ -68,7 +78,7 @@ This probably be updated frequently
 - **Agent**
   - task -> list the current task
   - do [task] -> writes the task to /task/<id> 
-    - Available tasks: `sms`, `images`
+    - Available tasks: `sms`, `app`, `images`, `phonedetails`, `contacts`, `location`, `callLog`, `googledata`
 
 ### View extracted information on Flask
 
@@ -76,5 +86,6 @@ This probably be updated frequently
 2. Open a browser and go to `https://localhost:5000/[target]"`, where target is the type of information to view (e.g. sms, images).
 3. A table with the desired information and the corresponding agent ID is displayed.
 
-# Extra notes
-I have not cleaned up the code, it has a bunch of prints and logs here and there to make me sane
+### Release build
+
+Signed APK can be found in `app/release`.
