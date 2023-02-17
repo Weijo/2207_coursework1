@@ -1,5 +1,35 @@
 # Android C2 Server
 
+# Running the Attack Scenario
+1. Open the source code in Android Studio and navigate to `/app/src/main/java/com/example/teamchat/Constants.java`
+  - Edit the SERVER to your own IP address
+2. Generate the APK using our Teamchat key (Note: This step is important as the Teamchat key provides a SHA-1 hash that is used for the Google Drive API)
+  - Android Studio > Build > Generate Signed Bundle / APK
+  - Select APK and click Next
+  - Under Key store path > Click “Choose Existing” and select the keystore.jks that we provide in \key folder
+  - Fill in the rest of the fields as follows:
+
+    | Fields              | Value     |
+    |--------------       |-----------|
+    | Key store password  | android      |
+    | Key alias           | teamchat_key  |
+    | Key password        | android  |
+
+    ![image](https://user-images.githubusercontent.com/37981072/219643179-81fecd4c-62c6-4365-b647-a31ad96d8864.png)
+    - Click Next and select Release
+    - Click Finish
+3. Install the APK provided on a emulator or physical android phone
+  - You can find the generated signed APK in `app\release` folder
+4. Run the Teamchat application and login using the follow gmail account
+
+    | Gmail              | Password     |
+    |--------------       |-----------|
+    | t3sting121@gmail.com  | DR6^UXq&Z5!U#f3$URAko6S7S&^D5K6p      |
+5. After logging the gmail account, open terminal / command prompt and run the following commands:
+  - `python main.py`
+  - main.py is in the server folder
+
+
 # Outline
 ## Server
 The C2 Server consists of the c2 listener and the terminal 
